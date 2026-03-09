@@ -1,0 +1,5269 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>SimpleDent - Randevu Sistemi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root { 
+  --primary:#6366f1; 
+  --primary-dark:#4f46e5;
+  --success:#10b981; 
+  --danger:#ef4444;
+  --warning:#f59e0b;
+  --info:#3b82f6;
+  --bg:#f8fafc; 
+  --card:#ffffff; 
+  --text:#1e293b; 
+  --text-secondary:#64748b;
+  --border:#e2e8f0;
+  --shadow:0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+  --font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dark { 
+  --primary:#818cf8;
+  --primary-dark:#6366f1;
+  --success:#34d399; 
+  --danger:#f87171;
+  --warning:#fbbf24;
+  --info:#60a5fa;
+  --bg:#0f172a; 
+  --card:#1e293b; 
+  --text:#f1f5f9; 
+  --text-secondary:#94a3b8;
+  --border:#334155;
+}
+
+.amoled { 
+  --primary:#a78bfa;
+  --primary-dark:#8b5cf6;
+  --success:#34d399; 
+  --danger:#f87171;
+  --warning:#fbbf24;
+  --info:#60a5fa;
+  --bg:#000000; 
+  --card:#0a0a0a; 
+  --text:#ffffff; 
+  --text-secondary:#a1a1aa;
+  --border:#27272a;
+}
+
+
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@keyframes slideUp {
+  from { transform:translateY(100%); opacity:0.5; }
+  to { transform:translateY(0); opacity:1; }
+}
+
+@keyframes slideDown {
+  from { transform:translateY(-20px); opacity:0; }
+  to { transform:translateY(0); opacity:1; }
+}
+
+@keyframes slideInRight {
+  from { transform:translateX(400px); opacity:0; }
+  to { transform:translateX(0); opacity:1; }
+}
+
+@keyframes slideOutRight {
+  from { transform:translateX(0); opacity:1; }
+  to { transform:translateX(400px); opacity:0; }
+}
+
+@keyframes scaleIn {
+  from { transform:scale(0.9); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform:scale(1); }
+  50% { transform:scale(1.03); }
+}
+
+@keyframes shake {
+  0%, 100% { transform:translateX(0); }
+  25% { transform:translateX(-5px); }
+  75% { transform:translateX(5px); }
+}
+
+@keyframes ripple {
+  0% { box-shadow:0 0 0 0 rgba(99, 102, 241, 0.4); }
+  100% { box-shadow:0 0 0 20px rgba(99, 102, 241, 0); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow:0 0 5px rgba(99, 102, 241, 0.5); }
+  50% { box-shadow:0 0 20px rgba(99, 102, 241, 0.8); }
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+  to { width: var(--progress-width); }
+}
+
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  left: 16px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-xl);
+  border-left: 4px solid var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInRight 0.3s ease;
+  pointer-events: all;
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.info { border-left-color: var(--info); }
+
+.toast.hiding {
+  animation: slideOutRight 0.3s ease forwards;
+}
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.toast.success .toast-icon {
+  background: var(--success);
+  color: white;
+}
+
+.toast.error .toast-icon {
+  background: var(--danger);
+  color: white;
+}
+
+.toast.warning .toast-icon {
+  background: var(--warning);
+  color: white;
+}
+
+.toast.info .toast-icon {
+  background: var(--info);
+  color: white;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  min-height: auto;
+  width: auto;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s ease;
+  border: none;
+  color: white;
+  font-size: 28px;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.5);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--success), var(--primary));
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chart-container {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 200px;
+  gap: 8px;
+}
+
+.bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  min-height: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.bar:hover {
+  opacity: 0.8;
+  transform: translateY(-4px);
+}
+
+.bar-label {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bar-value {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--bg);
+  margin-bottom: 16px;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-area.dragover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+.upload-text {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.uploaded-files {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uploaded-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.uploaded-file:hover {
+  border-color: var(--primary);
+}
+
+.file-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.file-icon.image {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.file-icon.pdf {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.file-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  min-height: auto;
+  padding: 0;
+}
+
+.file-action-btn:hover {
+  background: var(--border);
+}
+
+.file-action-btn.delete:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.pin-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.pin-screen.active {
+  display: flex;
+}
+
+.pin-container {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 40px 30px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pin-container h2 {
+  color: var(--primary);
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.pin-container p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s ease;
+}
+
+.pin-dot.filled {
+  background: var(--primary);
+  transform: scale(1.2);
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.pin-key {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-key:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.pin-key:active {
+  transform: scale(0.95);
+}
+
+.pin-key.clear {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+  font-size: 16px;
+}
+
+.pin-message {
+  color: var(--danger);
+  font-size: 13px;
+  min-height: 20px;
+  margin-top: 10px;
+}
+
+.pin-biometric-btn {
+  margin-top: 16px;
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.pin-biometric-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.pin-forgot {
+  margin-top: 12px;
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.pin-forgot:hover {
+  color: var(--primary-dark);
+}
+
+.confirmation-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirmation-modal.active {
+  display: flex;
+}
+
+.confirmation-content {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 300px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.confirmation-content h3 {
+  color: var(--text);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.confirmation-content p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.confirmation-details {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05));
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--primary);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.confirmation-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.confirmation-buttons button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  color: white;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text);
+}
+
+.btn-cancel:hover {
+  background: var(--border);
+}
+
+* { 
+  margin:0; 
+  padding:0; 
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body { 
+  background:var(--bg); 
+  color:var(--text); 
+  font-family:var(--font-family);
+  line-height:1.6;
+  padding:0;
+  min-height:100vh;
+  transition:background 0.3s ease, color 0.3s ease;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+.container { 
+  max-width:100%;
+  margin:0 auto; 
+  padding:10px;
+  padding-bottom:20px;
+}
+
+.header {
+  background:rgba(255,255,255,0.75);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:0;
+  z-index:100;
+  backdrop-filter:blur(25px) saturate(180%);
+  -webkit-backdrop-filter:blur(25px) saturate(180%);
+}
+
+.dark .header {
+  background:rgba(30,41,59,0.75);
+}
+
+.amoled .header {
+  background:rgba(10,10,10,0.75);
+}
+
+.header-content {
+  padding:0 10px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.logo {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-size:20px;
+  font-weight:700;
+  color:var(--primary);
+}
+
+.logo-icon {
+  width:36px;
+  height:36px;
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  animation: pulse 3s infinite;
+}
+
+.nav { 
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:8px;
+  width:100%;
+}
+
+.nav button { 
+  padding:14px 6px;
+  font-size:12px;
+  font-weight:600;
+  background:transparent;
+  color:var(--text);
+  border:2px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  position:relative;
+}
+
+.nav button:hover {
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(99, 102, 241, 0.2);
+  border-color:var(--primary);
+}
+
+.nav button:active {
+  transform:scale(0.98);
+}
+
+.nav button.active {
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+  animation:scaleIn 0.3s ease;
+}
+
+.card {
+  background:var(--card);
+  border-radius:12px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  margin-bottom:16px;
+  animation:slideDown 0.4s ease;
+}
+
+.form-group {
+  margin-bottom:16px;
+}
+
+.form-label {
+  display:block;
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:6px;
+}
+
+input, textarea, button, select { 
+  width:100%;
+  padding:14px 12px;
+  font-size:16px;
+  font-family:inherit;
+  box-sizing:border-box;
+  border-radius:10px;
+  border:2px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  transition:all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(99, 102, 241, 0.1);
+  transform:translateY(-1px);
+}
+
+textarea { 
+  resize:vertical; 
+  min-height:100px;
+  line-height:1.6;
+}
+
+button { 
+  cursor:pointer;
+  font-weight:600;
+  border:none;
+  color:white;
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+  transition:all 0.3s ease;
+  min-height:48px;
+  position:relative;
+  overflow:hidden;
+}
+
+button:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+button:active {
+  transform:scale(0.98);
+}
+
+button::before {
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,0.3);
+  transform:translate(-50%, -50%);
+  transition:width 0.6s, height 0.6s;
+}
+
+button:active::before {
+  width:300px;
+  height:300px;
+}
+
+.btn-success {
+  background:linear-gradient(135deg, var(--success), #059669);
+}
+
+.btn-success:hover {
+  box-shadow:0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-danger {
+  background:linear-gradient(135deg, var(--danger), #dc2626);
+}
+
+.btn-danger:hover {
+  box-shadow:0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-warning {
+  background:linear-gradient(135deg, var(--warning), #d97706);
+}
+
+.btn-warning:hover {
+  box-shadow:0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.section-title { 
+  font-size:22px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.section-title::before {
+  content:'';
+  width:4px;
+  height:26px;
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius:4px;
+  animation:glow 2s infinite;
+}
+
+.phone-group { 
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.phone-group input { 
+  margin:0;
+}
+
+.phone-group button { 
+  width:100%;
+  margin:0;
+}
+
+.appointment { 
+  background:var(--card);
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:all 0.3s ease;
+}
+
+.appointment:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--primary);
+}
+
+.appointment-header {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+
+.appointment-date {
+  font-size:15px;
+  font-weight:600;
+  color:var(--primary);
+}
+
+.appointment-actions {
+  display:flex;
+  gap:8px;
+}
+
+.appointment-actions button {
+  flex:1;
+  padding:10px 8px;
+  font-size:13px;
+  min-height:40px;
+}
+
+.finance-patient {
+  background:var(--card);
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.finance-patient:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--primary);
+}
+
+.finance-patient:active {
+  transform:scale(0.98);
+}
+
+.finance-patient-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.finance-patient-name {
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.finance-patient-phone {
+  font-size:13px;
+  color:var(--text-secondary);
+}
+
+.finance-patient-amount {
+  text-align:right;
+}
+
+.finance-patient-debt {
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+
+.finance-patient-remaining {
+  font-size:13px;
+  color:var(--danger);
+  font-weight:600;
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.5);
+  z-index:1000;
+  animation:fadeIn 0.3s ease;
+}
+
+.modal.active {
+  display:block;
+}
+
+.modal-content {
+  background:var(--bg);
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  overflow-y:auto;
+  animation:slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-overflow-scrolling:touch;
+}
+
+.modal-header {
+  background:var(--card);
+  padding:16px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:var(--shadow);
+}
+
+.modal-header h3 {
+  font-size:20px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.modal-close {
+  padding:8px 16px;
+  min-height:auto;
+  background:var(--text-secondary);
+  font-size:14px;
+  width:auto;
+}
+
+.modal-body {
+  padding:16px;
+}
+
+.patient-info-card {
+  background:var(--card);
+  padding:16px;
+  border-radius:10px;
+  margin-bottom:16px;
+  border:1px solid var(--border);
+  animation:slideDown 0.3s ease;
+}
+
+.patient-info-card h4 {
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:12px;
+  color:var(--primary);
+}
+
+.patient-info-row {
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+.patient-info-row:last-child {
+  border-bottom:none;
+}
+
+.patient-info-label {
+  color:var(--text-secondary);
+}
+
+.patient-info-value {
+  font-weight:600;
+  color:var(--text);
+}
+
+.payment-history-item {
+  background:var(--card);
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+  border:1px solid var(--border);
+  transition:all 0.2s ease;
+}
+
+.payment-history-item:hover {
+  transform:translateX(4px);
+  border-color:var(--primary);
+}
+
+.payment-history-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.payment-date {
+  font-size:12px;
+  color:var(--text-secondary);
+}
+
+.payment-amount {
+  font-size:16px;
+  font-weight:700;
+  color:var(--success);
+}
+
+.payment-details {
+  font-size:13px;
+  color:var(--text-secondary);
+}
+
+.payment-form {
+  display:flex;
+  gap:8px;
+  margin-top:16px;
+}
+
+.payment-form input {
+  flex:1;
+  margin:0;
+  padding:10px 12px;
+  font-size:14px;
+  min-height:auto;
+}
+
+.payment-form button {
+  width:auto;
+  padding:10px 20px;
+  min-height:auto;
+  font-size:13px;
+}
+
+#calendar-table table { 
+  width:100%;
+  border-collapse:separate;
+  border-spacing:4px;
+  margin-top:16px;
+}
+
+#calendar-table th { 
+  padding:8px 4px;
+  text-align:center;
+  font-weight:600;
+  color:var(--text-secondary);
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+#calendar-table td { 
+  padding:12px 8px;
+  text-align:center;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:500;
+  font-size:14px;
+  background:var(--card);
+  border:2px solid var(--border);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position:relative;
+  min-height:44px;
+}
+
+#calendar-table td:hover {
+  transform:translateY(-3px) scale(1.05);
+  box-shadow:0 4px 12px rgba(99, 102, 241, 0.3);
+  border-color:var(--primary);
+  z-index:10;
+}
+
+#calendar-table td:active { 
+  transform:scale(0.95);
+  transition:all 0.1s;
+}
+
+#calendar-table td.hasAppt { 
+  background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color:white;
+  font-weight:700;
+  box-shadow:var(--shadow);
+  animation:pulse 3s infinite;
+}
+
+#calendar-table td.hasAppt::after {
+  content:'';
+  width:5px;
+  height:5px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  top:4px;
+  right:4px;
+  animation:pulse 2s infinite;
+}
+
+#calendar-table td.selected {
+  background:linear-gradient(135deg, var(--success), #059669);
+  color:white;
+  font-weight:700;
+  box-shadow:var(--shadow-lg);
+  animation:scaleIn 0.3s ease, glow 2s infinite;
+}
+
+.time-grid { 
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:10px;
+  margin-top:16px;
+}
+
+.time-slot { 
+  padding:16px 12px;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  background:var(--card);
+  border:2px solid var(--border);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position:relative;
+  min-height:80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.time-slot:hover {
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 6px 16px rgba(99, 102, 241, 0.3);
+  border-color:var(--primary);
+}
+
+.time-slot:active { 
+  transform:scale(0.98);
+}
+
+.time-slot.booked { 
+  background:linear-gradient(135deg, var(--danger), #dc2626);
+  color:white;
+  border-color:var(--danger);
+  cursor:default;
+  animation:pulse 2s infinite;
+}
+
+.time-slot .time { 
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.time-slot .patient { 
+  font-size:11px;
+  opacity:0.95;
+  margin-top:2px;
+  word-break:break-word;
+}
+
+.time-slot .status {
+  font-size:12px;
+  opacity:0.7;
+  font-weight:500;
+}
+
+.day-header { 
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:16px;
+  padding:14px;
+  background:var(--card);
+  border-radius:10px;
+  border:1px solid var(--border);
+  animation:slideDown 0.3s ease;
+}
+
+.day-header h4 {
+  font-size:20px;
+  font-weight:700;
+  color:var(--primary);
+  text-align:center;
+}
+
+.day-header button { 
+  width:100%;
+  padding:12px;
+  font-size:14px;
+  background:var(--text-secondary);
+}
+
+.doctor-info { 
+  background:linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05));
+  padding:16px;
+  border-radius:10px;
+  margin-bottom:16px;
+  border:1px solid var(--primary);
+}
+
+.doctor-info h4 {
+  color:var(--primary);
+  margin-bottom:10px;
+  font-size:16px;
+}
+
+.doctor-info p {
+  margin:6px 0;
+  color:var(--text);
+  font-size:14px;
+}
+
+.support-section { 
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+  padding:16px;
+  border-radius:10px;
+  margin-top:20px;
+  border:1px solid var(--success);
+}
+
+.support-section h4 {
+  color:var(--success);
+  margin-bottom:12px;
+  font-size:18px;
+}
+
+.support-section p { 
+  margin:8px 0;
+  font-size:14px;
+}
+
+.support-section a { 
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:600;
+  word-break:break-word;
+  transition:all 0.2s ease;
+}
+
+.support-section a:hover {
+  text-decoration:underline;
+  color:var(--primary-dark);
+}
+
+.undo-bar { 
+  position:fixed;
+  left:10px;
+  right:10px;
+  bottom:16px;
+  transform:none;
+  background:var(--card);
+  color:var(--text);
+  padding:14px 16px;
+  border-radius:10px;
+  display:none;
+  z-index:1000;
+  box-shadow:var(--shadow-xl);
+  border:1px solid var(--border);
+  animation:slideUp 0.3s ease;
+  font-size:14px;
+}
+
+.undo-bar button { 
+  margin-left:12px;
+  background:var(--warning);
+  color:white;
+  border-radius:8px;
+  width:auto;
+  display:inline-block;
+  padding:8px 16px;
+  font-size:13px;
+  min-height:auto;
+}
+
+.hidden { display:none; }
+
+.badge {
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:600;
+  background:var(--primary);
+  color:white;
+  animation:pulse 2s infinite;
+}
+
+#calendar select {
+  width:100%;
+  margin-bottom:8px;
+  padding:12px;
+  font-size:15px;
+  font-weight:600;
+}
+
+#search, #finance-search {
+  margin-bottom:16px;
+  border:2px solid var(--border);
+  background:var(--card);
+  font-size:16px;
+}
+
+#finance-summary {
+  padding:16px;
+  background:var(--card);
+  border-radius:10px;
+  border:1px solid var(--border);
+  margin-bottom:16px;
+}
+
+#finance-summary > div {
+  padding:12px;
+  margin-bottom:10px;
+  background:rgba(99, 102, 241, 0.05);
+  border-radius:8px;
+  border-left:4px solid var(--primary);
+  font-size:13px;
+  word-break:break-word;
+}
+
+#finance-summary hr {
+  margin:16px 0;
+  border:none;
+  border-top:2px solid var(--border);
+}
+
+#finance-summary p {
+  font-size:16px;
+  font-weight:600;
+  margin:10px 0;
+}
+
+.export-code-box {
+  background:var(--card);
+  border:2px solid var(--primary);
+  border-radius:10px;
+  padding:16px;
+  margin-top:16px;
+  display:none;
+  animation:slideDown 0.3s ease;
+}
+
+.export-code-box textarea {
+  font-family:monospace;
+  font-size:12px;
+  min-height:150px;
+  resize:vertical;
+  word-break:break-all;
+}
+
+.export-code-box button {
+  margin-top:10px;
+}
+
+.page-transition {
+  animation:fadeIn 0.3s ease;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance:none;
+  margin:0;
+}
+
+input[type="number"] {
+  -moz-appearance:textfield;
+}
+
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  text-align: center;
+  padding: 20px;
+}
+
+.welcome-screen h2 {
+  font-size: 24px;
+  color: var(--primary);
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.welcome-screen p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.8;
+}
+
+.welcome-icon {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 50px;
+  margin-bottom: 24px;
+  animation: pulse 3s infinite;
+}
+
+@media (max-width: 400px) {
+  .logo {
+    font-size: 18px;
+  }
+  
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .nav button {
+    padding: 12px 4px;
+    font-size: 11px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .welcome-screen h2 {
+    font-size: 22px;
+  }
+  
+  .welcome-icon {
+    width: 90px;
+    height: 90px;
+    font-size: 45px;
+  }
+  
+  .fab {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    bottom: 70px;
+    right: 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<div id="pin-screen" class="pin-screen">
+  <div class="pin-container">
+    <h2 id="pin-title">PIN Daxil Edin</h2>
+    <p id="pin-subtitle">Davam etmək üçün PIN kodunuzu daxil edin</p>
+    <div class="pin-dots">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+    <div class="pin-keypad">
+      <button class="pin-key" onclick="enterPin('1')">1</button>
+      <button class="pin-key" onclick="enterPin('2')">2</button>
+      <button class="pin-key" onclick="enterPin('3')">3</button>
+      <button class="pin-key" onclick="enterPin('4')">4</button>
+      <button class="pin-key" onclick="enterPin('5')">5</button>
+      <button class="pin-key" onclick="enterPin('6')">6</button>
+      <button class="pin-key" onclick="enterPin('7')">7</button>
+      <button class="pin-key" onclick="enterPin('8')">8</button>
+      <button class="pin-key" onclick="enterPin('9')">9</button>
+      <button class="pin-key clear" onclick="clearPin()" id="pin-clear">Təmizlə</button>
+      <button class="pin-key" onclick="enterPin('0')">0</button>
+      <button class="pin-key clear" onclick="deletePin()">⌫</button>
+    </div>
+
+    <div class="pin-forgot" onclick="forgotPin()" id="pin-forgot">Şifrəmi Unutdum</div>
+    <div class="pin-message" id="pin-message"></div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-content">
+    <div class="logo">
+      <div class="logo-icon">S</div>
+      <span>SimpleDent</span>
+    </div>
+    <div class="nav">
+      <button onclick="showPage('add')" id="nav-add">+ Randevu</button>
+      <button onclick="showPage('calendar')" id="nav-calendar">Təqvim</button>
+      <button onclick="showPage('finance')" id="nav-finance">Maliyyə</button>
+      <button onclick="showPage('settings')" id="nav-settings">Ayarlar</button>
+      <button onclick="showPage('delete')" id="nav-delete" style="grid-column:span 2;">Randevular</button>
+    </div>
+  </div>
+</div>
+
+<button class="fab" onclick="showPage('add')" title="Yeni Randevu">
+  +
+</button>
+
+<div class="container">
+
+<div id="welcome" class="page-transition">
+  <div class="welcome-screen">
+    <div class="welcome-icon">🦷</div>
+    <h2 id="welcome-title">SimpleDent-ə Xoş Gəlmisiniz</h2>
+    <p id="welcome-text">Həkimlər üçün randevu idarəçiliyi sisteminə xoş gəlmisiniz.<br>Başlamaq üçün yuxarıdakı menyudan bölmə seçin.</p>
+  </div>
+</div>
+
+<div id="add" class="hidden page-transition">
+  <div class="card">
+    <h3 class="section-title" id="add-title">Yeni Randevu</h3>
+    <div class="form-group">
+      <label class="form-label" id="label-name">Ad Soyadı</label>
+      <input id="name" placeholder="">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-phone">Telefon Nömrəsi</label>
+      <div class="phone-group">
+        <input id="phone" type="tel" placeholder="+994 XX XXX XX XX">
+        <button type="button" onclick="pickContact()" id="btn-contact">Kontakt Seç</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-date">Tarix</label>
+      <input type="date" id="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-time">Saat</label>
+      <select id="time">
+        <option value="" id="opt-time">Saat Seçin</option>
+        <option value="09:00">09:00</option>
+        <option value="09:30">09:30</option>
+        <option value="10:00">10:00</option>
+        <option value="10:30">10:30</option>
+        <option value="11:00">11:00</option>
+        <option value="11:30">11:30</option>
+        <option value="12:00">12:00</option>
+        <option value="12:30">12:30</option>
+        <option value="13:00">13:00</option>
+        <option value="13:30">13:30</option>
+        <option value="14:00">14:00</option>
+        <option value="14:30">14:30</option>
+        <option value="15:00">15:00</option>
+        <option value="15:30">15:30</option>
+        <option value="16:00">16:00</option>
+        <option value="16:30">16:30</option>
+        <option value="17:00">17:00</option>
+        <option value="17:30">17:30</option>
+        <option value="18:00">18:00</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-note">Qeyd (Yalnız sizin üçün)</label>
+      <textarea id="note" placeholder=""></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-amount">Məbləğ (₼)</label>
+      <input type="number" id="debt" placeholder="0" inputmode="decimal">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="label-paid">Ödənilən (₼)</label>
+      <input type="number" id="paid" placeholder="0" inputmode="decimal">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label" id="label-docs">Sənədlər (Şəkil və ya PDF)</label>
+      <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text" id="upload-text">Faylları yükləmək üçün klikləyin</div>
+        <div class="upload-hint" id="upload-hint">PNG, JPG və ya PDF (maks. 5MB)</div>
+      </div>
+      <input type="file" id="file-input" accept="image/*,.pdf" multiple style="display:none;" onchange="handleFiles(this.files)">
+      <div id="uploaded-files" class="uploaded-files"></div>
+    </div>
+    
+    <button onclick="add()" class="btn-success" id="btn-create">Randevu Yarat</button>
+  </div>
+</div>
+
+<div id="finance" class="hidden page-transition">
+  <div class="card">
+    <h3 class="section-title" id="finance-title">Maliyyə</h3>
+    
+    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:16px;">
+      <div style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); padding:12px; border-radius:10px; border:1px solid var(--success);">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-patient-income">Xəstə Gəliri</p>
+        <p style="color:var(--success); font-size:18px; font-weight:700;" id="patient-income">0₼</p>
+      </div>
+      
+      <div style="background:linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); padding:12px; border-radius:10px; border:1px solid var(--success);">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-other-income">Digər Gəlirlər</p>
+        <p style="color:var(--success); font-size:18px; font-weight:700;" id="other-income">0₼</p>
+      </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:16px;">
+      <div style="background:linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05)); padding:12px; border-radius:10px; border:2px solid var(--primary); text-align:center;">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-total">Ümumi</p>
+        <p style="color:var(--primary); font-size:18px; font-weight:700;" id="total-income">0₼</p>
+      </div>
+      
+      <div style="background:linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding:12px; border-radius:10px; border:2px solid var(--danger); text-align:center;">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-expense">Xərc</p>
+        <p style="color:var(--danger); font-size:18px; font-weight:700;" id="total-expense">0₼</p>
+      </div>
+      
+      <div style="background:linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding:12px; border-radius:10px; border:2px solid var(--success); text-align:center;">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-net">Xalis</p>
+        <p style="color:var(--success); font-size:18px; font-weight:700;" id="net-income">0₼</p>
+      </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:16px;">
+      <button onclick="showFinanceTab('patients')" id="tab-patients" class="active" style="background:var(--primary); color:white;">Xəstələr</button>
+      <button onclick="showFinanceTab('income')" id="tab-income" style="background:transparent; border:2px solid var(--border);">Gəlir</button>
+      <button onclick="showFinanceTab('expense')" id="tab-expense" style="background:transparent; border:2px solid var(--border);">Xərclər</button>
+    </div>
+    
+    <div id="patients-tab">
+      <input id="finance-search" placeholder="" oninput="showFinance()">
+      
+      <div style="background:linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding:12px; border-radius:10px; border:2px solid var(--danger); margin-bottom:12px; margin-top:12px;">
+        <p style="color:var(--text-secondary); font-size:11px; margin-bottom:6px;" id="lbl-total-remaining">Ümumi Xəstə Qalığı</p>
+        <p style="color:var(--danger); font-size:20px; font-weight:700;" id="patient-total-remaining">0₼</p>
+      </div>
+      
+      <div id="finance-summary"></div>
+      <div id="finance-patients"></div>
+    </div>
+    
+    <div id="income-tab" style="display:none;">
+      <div style="margin-bottom:16px;">
+        <h4 style="margin-bottom:10px; font-size:14px; color:var(--primary);" id="income-add-title">Gəlir Əlavə Et</h4>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="income-lbl-name">Ad</label>
+          <input type="text" id="income-name" placeholder="" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="income-lbl-amount">Məbləğ (₼)</label>
+          <input type="number" id="income-amount" placeholder="0" inputmode="decimal" step="0.01" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="income-lbl-date">Tarix</label>
+          <input type="date" id="income-date" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="income-lbl-note">Qeyd</label>
+          <textarea id="income-note" placeholder="..." style="min-height:50px; padding:10px; font-size:14px;"></textarea>
+        </div>
+        <button onclick="addIncome()" class="btn-success" style="width:100%; padding:12px; font-size:14px;" id="btn-add-income">Əlavə Et</button>
+      </div>
+      
+      <div id="income-summary"></div>
+      <div id="income-list"></div>
+    </div>
+    
+    <div id="expense-tab" style="display:none;">
+      <div style="margin-bottom:16px;">
+        <h4 style="margin-bottom:10px; font-size:14px; color:var(--primary);" id="expense-add-title">Xərc Əlavə Et</h4>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="expense-lbl-name">Ad</label>
+          <input type="text" id="expense-name" placeholder="" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="expense-lbl-amount">Məbləğ (₼)</label>
+          <input type="number" id="expense-amount" placeholder="0" inputmode="decimal" step="0.01" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="expense-lbl-date">Tarix</label>
+          <input type="date" id="expense-date" style="padding:10px; font-size:14px;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label class="form-label" style="font-size:12px;" id="expense-lbl-note">Qeyd</label>
+          <textarea id="expense-note" placeholder="..." style="min-height:50px; padding:10px; font-size:14px;"></textarea>
+        </div>
+        <button onclick="addExpense()" class="btn-danger" style="width:100%; padding:12px; font-size:14px;" id="btn-add-expense">Əlavə Et</button>
+      </div>
+      
+      <div id="expense-summary"></div>
+      <div id="expense-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="calendar" class="hidden page-transition">
+  <div class="card">
+    <h3 class="section-title" id="calendar-title">Randevu Təqvimi</h3>
+    <div>
+      <select id="month" onchange="buildCalendar()"></select>
+    </div>
+    <div id="calendar-table"></div>
+    <div id="day-appointments"></div>
+  </div>
+</div>
+
+<div id="delete" class="hidden page-transition">
+  <div class="card">
+    <h3 class="section-title" id="delete-title">Bütün Randevular</h3>
+    <input id="search" placeholder="Axtar (ad və ya telefon)..." oninput="showDelete()">
+    <button onclick="deleteAll()" class="btn-danger" style="margin-bottom:16px;" id="btn-delete-all">Hamısını Sil</button>
+    <div id="list"></div>
+  </div>
+</div>
+
+<div id="settings" class="hidden page-transition">
+  <div class="card">
+    <h3 class="section-title" id="settings-title">Tənzimləmələr</h3>
+    
+    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-bottom:16px;">
+      <button onclick="showSettingsTab('doctor')" id="tab-doctor" class="active" style="background:var(--primary); color:white; padding:10px 4px; font-size:11px;">Həkim</button>
+      <button onclick="showSettingsTab('appearance')" id="tab-appearance" style="background:transparent; border:2px solid var(--border); padding:10px 4px; font-size:11px;">Görünüş</button>
+      <button onclick="showSettingsTab('stats')" id="tab-stats" style="background:transparent; border:2px solid var(--border); padding:10px 4px; font-size:11px;">Statistika</button>
+      <button onclick="showSettingsTab('backup')" id="tab-backup" style="background:transparent; border:2px solid var(--border); padding:10px 4px; font-size:11px;">Yedək</button>
+    </div>
+    
+    <div id="doctor-tab">
+      <div class="doctor-info" id="doctor-display"></div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-doctor">Həkim Adı</label>
+        <input type="text" id="doctor-name" placeholder="Dr. ...">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-clinic">Klinika Adı</label>
+        <input type="text" id="clinic-name" placeholder="Klinika adı">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-phone">Telefon</label>
+        <input type="tel" id="doctor-phone" placeholder="+994 XX XXX XX XX">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-email">E-poçt</label>
+        <input type="email" id="doctor-email" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-address">Ünvan</label>
+        <input type="text" id="clinic-address" placeholder="Ünvan">
+      </div>
+      <button onclick="saveDoctorInfo()" class="btn-success" id="btn-save-doctor">Yadda Saxla</button>
+    </div>
+    
+    <div id="appearance-tab" style="display:none;">
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-lang">Dil</label>
+        <select id="language-select" onchange="setLanguage(this.value)">
+          <option value="az">Azərbaycan</option>
+          <option value="tr">Türkçe</option>
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-message-lang">WhatsApp Mesaj Dili</label>
+        <select id="settings-message-lang" onchange="saveMessageLang(this.value)">
+          <option value="az">Azərbaycanca</option>
+          <option value="tr">Türkçe</option>
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+          <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="ar">العربية</option>
+          <option value="fa">فارسی</option>
+          <option value="he">עברית</option>
+          <option value="hi">हिन्दी</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="pl">Polski</option>
+          <option value="nl">Nederlands</option>
+          <option value="sv">Svenska</option>
+          <option value="uk">Українська</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-message-template">Mesaj Şablonu</label>
+        <textarea id="settings-message-template" placeholder="Salam {name}, randevunuz {date} tarixində saat {time}-dadır." style="min-height:100px;"></textarea>
+        <p style="font-size:12px; color:var(--text-secondary); margin-top:6px;">
+          <strong>İstifadə edə biləcəyiniz dəyişənlər:</strong><br>
+          {name} - Xəstə adı<br>
+          {date} - Tarix<br>
+          {time} - Saat
+        </p>
+        <button onclick="saveMessageTemplate()" style="margin-top:8px; width:100%;">Mesaj Şablonunu Saxla</button>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-theme">Tema</label>
+        <select id="theme-select" onchange="setTheme(this.value)">
+          <option value="light" id="theme-light">İşıqlı</option>
+          <option value="dark" id="theme-dark">Qaranlıq</option>
+          <option value="amoled" id="theme-amoled">AMOLED</option>
+          <option value="auto" id="theme-auto">Avtomatik</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-font">Yazı Tipi</label>
+        <select id="font-select" onchange="setFont(this.value)">
+          <option value="Inter" id="font-inter">Inter (Standart)</option>
+          <option value="Roboto">Roboto</option>
+          <option value="Poppins">Poppins</option>
+          <option value="Open Sans">Open Sans</option>
+          <option value="Montserrat">Montserrat</option>
+          <option value="CustomFont" id="font-custom">Öz Fontum (TTF)</option>
+        </select>
+      </div>
+      
+      <div class="form-group" id="custom-font-upload" style="display:none;">
+        <label class="form-label" id="settings-lbl-upload-font">Font Faylı Yüklə (.ttf)</label>
+        <input type="file" id="font-file" accept=".ttf,.otf" onchange="uploadCustomFont(this.files)">
+        <p style="font-size:12px; color:var(--text-secondary); margin-top:6px;" id="font-upload-note">TTF və ya OTF formatında font yükləyin</p>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-haptic">Haptic Feedback</label>
+        <select id="haptic-select" onchange="toggleHaptic(this.value)">
+          <option value="on" id="haptic-on">Açıq</option>
+          <option value="off" id="haptic-off">Qapalı</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-currency">Valyuta</label>
+        <select id="currency-select" onchange="setCurrency(this.value)">
+          <option value="₼" id="currency-azn">₼ - Azərbaycan Manatı</option>
+          <option value="₺" id="currency-try">₺ - Türk Lirası</option>
+          <option value="$" id="currency-usd">$ - Dollar</option>
+          <option value="€" id="currency-eur">€ - Euro</option>
+          <option value="₽" id="currency-rub">₽ - Rubl</option>
+          <option value="£" id="currency-gbp">£ - Funt</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" id="settings-lbl-phone-code">Telefon Kodu</label>
+        <select id="phone-code-select" onchange="setPhoneCode(this.value)">
+          <option value="+994">+994 - Azərbaycan</option>
+          <option value="+90">+90 - Türkiyə</option>
+          <option value="+1">+1 - ABŞ/Kanada</option>
+          <option value="+44">+44 - Birləşmiş Krallıq</option>
+          <option value="+7">+7 - Rusiya</option>
+          <option value="custom">Digər (Custom)</option>
+        </select>
+      </div>
+      
+      <div class="form-group" id="custom-phone-code-input" style="display:none;">
+        <label class="form-label" id="settings-lbl-custom-phone">Custom Telefon Kodu</label>
+        <input type="text" id="custom-phone-code" placeholder="+123" maxlength="6">
+        <button onclick="saveCustomPhoneCode()" style="margin-top:8px; width:100%;">Saxla</button>
+      </div>
+    </div>
+    
+    <div id="stats-tab" style="display:none;">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #667eea, #764ba2); color:white;">
+            📅
+          </div>
+          <div class="stat-value" id="total-appointments">0</div>
+          <div class="stat-label" id="stat-lbl-appt">Ümumi Randevu</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #f093fb, #f5576c); color:white;">
+            👥
+          </div>
+          <div class="stat-value" id="total-patients">0</div>
+          <div class="stat-label" id="stat-lbl-patients">Xəstə Sayı</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #4facfe, #00f2fe); color:white;">
+            💰
+          </div>
+          <div class="stat-value" id="stat-income">0₼</div>
+          <div class="stat-label" id="stat-lbl-income">Ümumi Gəlir</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #43e97b, #38f9d7); color:white;">
+            ✓
+          </div>
+          <div class="stat-value" id="completion-rate">0%</div>
+          <div class="stat-label" id="stat-lbl-completion">Tamamlanma</div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-title" id="chart-lbl-monthly">Aylıq Randevu Statistikası</div>
+        <div class="bar-chart" id="monthly-chart"></div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-title" id="chart-lbl-payment">Ödəniş Statusu</div>
+        <div id="payment-status-chart"></div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-title" id="chart-lbl-hours">Ən Aktiv Saatlar</div>
+        <div class="bar-chart" id="time-chart"></div>
+      </div>
+    </div>
+    
+    <div id="backup-tab" style="display:none;">
+      <div style="margin-bottom:20px;">
+        <h4 style="margin-bottom:12px; font-size:16px; color:var(--warning);" id="backup-security">Təhlükəsizlik</h4>
+        <div class="form-group">
+          <label class="form-label" id="backup-lbl-pin">PIN Kod (4 rəqəm)</label>
+          <input type="password" id="pin-input" maxlength="4" inputmode="numeric" placeholder="1234" style="padding:10px; font-size:14px;">
+        </div>
+        <button onclick="savePinCode()" class="btn-warning" style="width:100%;" id="btn-save-pin">PIN Yadda Saxla</button>
+        <button onclick="removePinCode()" class="btn-danger" style="width:100%; margin-top:10px;" id="btn-remove-pin">PIN Sil</button>
+      </div>
+      
+      <hr style="margin:16px 0; border:none; border-top:2px solid var(--border);">
+      
+      <h4 style="margin-bottom:12px; font-size:16px; color:var(--success);" id="backup-export">Export</h4>
+      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;" id="backup-export-text">Bütün məlumatlarınızı yedəkləyin:</p>
+      <button onclick="exportData()" class="btn-warning" style="width:100%; margin-bottom:16px;" id="btn-export">Yedək Fayl Endir</button>
+      <button onclick="importBackupFile()" class="btn-success" style="width:100%; margin-bottom:16px;" id="btn-import-file">Fayldan Import Et</button>
+      
+      <div class="export-code-box" id="export-code-box">
+        <p style="font-size:13px; margin-bottom:10px; color:var(--text-secondary);" id="export-note">Bu kodu kopyalayıb saxlayın:</p>
+        <textarea id="export-code" readonly onclick="this.select()" style="font-size:12px; font-family:monospace;"></textarea>
+        <button onclick="copyExportCode()" class="btn-success" style="margin-top:10px; width:100%;" id="btn-copy-export">Kopyala</button>
+      </div>
+      
+      <hr style="margin:16px 0; border:none; border-top:2px solid var(--border);">
+      
+      <h4 style="margin-bottom:12px; font-size:16px; color:var(--primary);" id="backup-import">Import</h4>
+      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;" id="backup-import-text">Əvvəlcə aldığınız kodu yapışdırın:</p>
+      <div class="form-group">
+        <textarea id="import-code" placeholder="Export kodunuzu bura yapışdırın..." style="min-height:100px;"></textarea>
+      </div>
+      <button onclick="importFromCode()" class="btn-success" style="width:100%;" id="btn-import">Kodu Yükləyin</button>
+      
+      <hr style="margin:16px 0; border:none; border-top:2px solid var(--border);">
+      
+      <h4 style="margin-bottom:12px; font-size:16px; color:var(--danger);" id="backup-danger">Təhlükəli Bölgə</h4>
+      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;" id="backup-danger-text">Bu əməl geri qaytarıla bilməz!</p>
+      <button onclick="clearAllData()" class="btn-danger" style="width:100%;" id="btn-clear-all">Bütün Məlumatları Sil</button>
+    </div>
+    
+<div class="support-section" style="margin-top:24px;">
+  <h4 id="about-title">Haqqında SimpleDent</h4>
+  <p><strong id="about-version">Versiya:</strong> <span class="badge">2.4</span></p>
+  <p><strong id="about-device">Cihaz:</strong> <span id="device-info">Yüklənir...</span></p>
+  <p><strong id="about-email">E-poçt:</strong> 
+    <a id="email-link" href="#">asusaspire20@gmail.com</a>
+  </p>
+  <p><strong id="about-phone">Telefon:</strong> <a href="tel:+9940703287420">070 328 74 20</a></p>
+  <p><strong>WhatsApp:</strong> <a href="https://wa.me/9940703287420" target="_blank" id="about-whatsapp">Mesaj Göndər</a></p>
+</div>
+
+<script>
+  // Cihaz məlumatını təyin et
+  let deviceInfo = "Unknown";
+  if (navigator.userAgent.includes("Android")) {
+    const versionMatch = navigator.userAgent.match(/Android\s([0-9\.]+)/);
+    deviceInfo = "Android " + (versionMatch ? versionMatch[1] : "");
+  } else if (navigator.platform.includes("Win")) {
+    deviceInfo = "Windows";
+  } else if (navigator.platform.includes("Linux")) {
+    deviceInfo = "Linux";
+  }
+  document.getElementById("device-info").textContent = deviceInfo;
+
+  // Mail linkini hazırla
+  const emailBody = encodeURIComponent(
+`Proqramda bug var vəya istəyim var: 
+App: SimpleDent
+Cihaz: ${deviceInfo}
+App versiyası: 2.4
+
+Problem/istək bura:`
+  );
+  const emailLink = document.getElementById("email-link");
+  const em = "asusaspire20" + "@" + "gmail.com";
+  emailLink.href = `mailto:${em}?subject=SimpleDent&body=${emailBody}`;
+  emailLink.textContent = em;
+</script>
+
+  </div>
+</div>
+
+</div>
+
+<div id="confirmation-modal" class="confirmation-modal">
+  <div class="confirmation-content">
+    <h3 id="confirm-title">Silinsin?</h3>
+    <div class="confirmation-details" id="confirmation-details"></div>
+    <p style="margin-bottom: 16px;" id="confirm-text">Bu əməl geri qaytarıla bilər (5 saniyə içində).</p>
+    <div class="confirmation-buttons">
+      <button class="btn-confirm" onclick="confirmDelete()" id="btn-confirm">Sil</button>
+      <button class="btn-cancel" onclick="cancelDelete()" id="btn-cancel">Ləğv Et</button>
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="edit-title">Randevu Redaktə Et</h3>
+      <button onclick="closeEditModal()" class="modal-close" id="btn-close-edit">Bağla</button>
+    </div>
+    <div class="modal-body">
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-name">Ad Soyadı</label>
+          <input id="edit-name" placeholder="">
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-phone">Telefon Nömrəsi</label>
+          <input id="edit-phone" type="tel" placeholder="+994 XX XXX XX XX">
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-date">Tarix</label>
+          <input type="date" id="edit-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-time">Saat</label>
+          <select id="edit-time">
+            <option value="" id="edit-opt-time">Saat Seçin</option>
+            <option value="09:00">09:00</option>
+            <option value="09:30">09:30</option>
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+            <option value="15:00">15:00</option>
+            <option value="15:30">15:30</option>
+            <option value="16:00">16:00</option>
+            <option value="16:30">16:30</option>
+            <option value="17:00">17:00</option>
+            <option value="17:30">17:30</option>
+            <option value="18:00">18:00</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-note">Qeyd</label>
+          <textarea id="edit-note" placeholder=""></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-amount">Məbləğ (₼)</label>
+          <input type="number" id="edit-debt" placeholder="0" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="edit-lbl-paid">Ödənilən (₼)</label>
+          <input type="number" id="edit-paid" placeholder="0" inputmode="decimal">
+        </div>
+        <button onclick="saveEdit()" class="btn-success" id="btn-save-edit">Dəyişiklikləri Saxla</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="patient-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-patient-name"></h3>
+      <button onclick="closePatientModal()" class="modal-close" id="btn-close-patient">Bağla</button>
+    </div>
+    <div class="modal-body">
+      <div class="patient-info-card">
+        <h4 id="patient-info-title">Xəstə məlumatları</h4>
+        <div class="patient-info-row">
+          <span class="patient-info-label" id="patient-info-lbl-phone">Telefon:</span>
+          <span class="patient-info-value" id="modal-patient-phone"></span>
+        </div>
+        <div class="patient-info-row">
+          <span class="patient-info-label" id="patient-info-lbl-debt">Ümumi məbləğ:</span>
+          <span class="patient-info-value" id="modal-patient-debt"></span>
+        </div>
+        <div class="patient-info-row">
+          <span class="patient-info-label" id="patient-info-lbl-paid">Ödənilən:</span>
+          <span class="patient-info-value" id="modal-patient-paid"></span>
+        </div>
+        <div class="patient-info-row">
+          <span class="patient-info-label" id="patient-info-lbl-remaining">Qalıq:</span>
+          <span class="patient-info-value" style="color:var(--danger);" id="modal-patient-remaining"></span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="modal-patient-progress"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progress-percentage">0%</span>
+          <span id="progress-lbl">Tamamlanma</span>
+        </div>
+      </div>
+
+      <div class="patient-info-card">
+        <h4 id="patient-payment-title">Yeni ödəniş əlavə et</h4>
+        <div class="payment-form">
+          <input type="number" id="modal-payment-input" placeholder="Məbləğ (₼)" inputmode="decimal" step="0.01">
+          <button onclick="addPaymentFromModal()" class="btn-success" id="btn-pay">Ödə</button>
+        </div>
+      </div>
+
+      <div class="patient-info-card">
+        <h4 id="patient-history-title">Ödəniş tarixçəsi</h4>
+        <div id="payment-history"></div>
+      </div>
+
+      <div class="patient-info-card">
+        <h4 id="patient-appt-history-title">Randevu tarixçəsi</h4>
+        <div id="appointment-history"></div>
+      </div>
+      
+      <div class="patient-info-card">
+        <h4 id="patient-docs-title">Yüklənmiş Sənədlər</h4>
+        <div id="patient-documents"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="undo" class="undo-bar">
+  <span id="undo-text">Randevu silindi</span>
+  <button onclick="undo()" id="btn-undo">Geri Al</button>
+</div>
+
+<script>
+const translations = {
+  az: {
+    'month-0': 'Yanvar', 'month-1': 'Fevral', 'month-2': 'Mart', 'month-3': 'Aprel',
+    'month-4': 'May', 'month-5': 'İyun', 'month-6': 'İyul', 'month-7': 'Avqust',
+    'month-8': 'Sentyabr', 'month-9': 'Oktyabr', 'month-10': 'Noyabr', 'month-11': 'Dekabr',
+    'weekday-0': 'BE', 'weekday-1': 'ÇA', 'weekday-2': 'ÇƏ', 'weekday-3': 'CA',
+    'weekday-4': 'C', 'weekday-5': 'Ş', 'weekday-6': 'B',
+    'settings-lbl-currency': 'Valyuta',
+    'settings-lbl-phone-code': 'Telefon Kodu',
+    'settings-lbl-custom-phone': 'Custom Telefon Kodu',
+    'phone-code-az': '+994 - Azərbaycan',
+    'phone-code-tr': '+90 - Türkiyə',
+    'phone-code-us': '+1 - ABŞ/Kanada',
+    'phone-code-uk': '+44 - Birləşmiş Krallıq',
+    'phone-code-ru': '+7 - Rusiya',
+    'phone-code-custom': 'Digər (Custom)',
+    'no-appointments': 'Hələ randevu yoxdur',
+    'placeholder-search': 'Axtar (ad və ya telefon)...',
+    'placeholder-import-code': 'Export kodunuzu bura yapışdırın...',
+    'placeholder-name': 'Xəstənin tam adı',
+    'placeholder-note': 'Xəstə haqqında qeydlər...',
+    'placeholder-finance-search': 'Xəstə axtar (ad və ya telefon)...',
+    'placeholder-income-name': 'Konsultasiya, müayinə...',
+    'placeholder-expense-name': 'Kirayə, elektrik...',
+    'placeholder-doctor-name': 'Dr. Ad Soyad',
+    'placeholder-clinic-name': 'Klinika adı',
+    'placeholder-clinic-address': 'Ünvan',
+    'no-income': 'Hələ gəlir əlavə edilməmişdir',
+    'no-expense': 'Hələ xərc əlavə edilməmişdir',
+    'income-report': 'Gəlir Hesabatı',
+    'total-income': 'Ümumi Gəlir:',
+    'expense-report': 'Xərc Hesabatı',
+    'total-expense': 'Ümumi Xərc:',
+    'btn-import-file': 'Fayldan Import Et',
+    'doctor-info-add': 'Həkim məlumatları əlavə edin',
+    'chart-monthly': 'Aylıq Randevu Statistikası',
+    'payment-full': 'Tam Ödənilmiş',
+    'payment-partial': 'Qismən Ödənilmiş',
+    'payment-none': 'Ödənilməmiş',
+    'finance-total-debt': 'Ümumi Məbləğ:',
+    'finance-total-remaining': 'Ümumi Qalıq:',
+    'nav-add': '+ Randevu',
+    'nav-calendar': 'Təqvim',
+    'nav-finance': 'Maliyyə',
+    'nav-settings': 'Ayarlar',
+    'nav-delete': 'Randevular',
+    'welcome-title': 'SimpleDent-ə Xoş Gəlmisiniz',
+    'welcome-text': 'Həkimlər üçün randevu idarəçiliyi sisteminə xoş gəlmisiniz.<br>Başlamaq üçün yuxarıdakı menyudan bölmə seçin.',
+    'add-title': 'Yeni Randevu',
+    'label-name': 'Ad Soyadı',
+    'label-phone': 'Telefon Nömrəsi',
+    'btn-contact': 'Kontakt Seç',
+    'label-date': 'Tarix',
+    'label-time': 'Saat',
+    'opt-time': 'Saat Seçin',
+    'label-note': 'Qeyd (Yalnız sizin üçün)',
+    'label-amount': 'Məbləğ',
+    'label-paid': 'Ödənilən',
+    'label-docs': 'Sənədlər (Şəkil və ya PDF)',
+    'upload-text': 'Faylları yükləmək üçün klikləyin',
+    'upload-hint': 'PNG, JPG və ya PDF (maks. 5MB)',
+    'btn-create': 'Randevu Yarat',
+    'finance-title': 'Maliyyə',
+    'lbl-patient-income': 'Xəstə Gəliri',
+    'lbl-other-income': 'Digər Gəlirlər',
+    'lbl-total': 'Ümumi',
+    'lbl-expense': 'Xərc',
+    'lbl-net': 'Xalis',
+    'tab-patients': 'Xəstələr',
+    'tab-income': 'Gəlir',
+    'tab-expense': 'Xərclər',
+    'lbl-total-remaining': 'Ümumi Xəstə Qalığı',
+    'income-add-title': 'Gəlir Əlavə Et',
+    'income-lbl-name': 'Ad',
+    'income-lbl-amount': 'Məbləğ',
+    'income-lbl-date': 'Tarix',
+    'income-lbl-note': 'Qeyd',
+    'btn-add-income': 'Əlavə Et',
+    'expense-add-title': 'Xərc Əlavə Et',
+    'expense-lbl-name': 'Ad',
+    'expense-lbl-amount': 'Məbləğ',
+    'expense-lbl-date': 'Tarix',
+    'expense-lbl-note': 'Qeyd',
+    'btn-add-expense': 'Əlavə Et',
+    'calendar-title': 'Randevu Təqvimi',
+    'delete-title': 'Bütün Randevular',
+    'btn-delete-all': 'Hamısını Sil',
+    'settings-title': 'Tənzimləmələr',
+    'tab-doctor': 'Həkim',
+    'tab-appearance': 'Görünüş',
+    'tab-stats': 'Statistika',
+    'tab-backup': 'Yedək',
+    'settings-lbl-doctor': 'Həkim Adı',
+    'settings-lbl-clinic': 'Klinika Adı',
+    'settings-lbl-phone': 'Telefon',
+    'settings-lbl-email': 'E-poçt',
+    'settings-lbl-address': 'Ünvan',
+    'btn-save-doctor': 'Yadda Saxla',
+    'settings-lbl-lang': 'Dil',
+    'settings-lbl-theme': 'Tema',
+    'theme-light': 'İşıqlı',
+    'theme-dark': 'Qaranlıq',
+    'theme-amoled': 'AMOLED',
+    'theme-auto': 'Avtomatik',
+    'settings-lbl-font': 'Yazı Tipi',
+    'font-inter': 'Inter (Standart)',
+    'font-custom': 'Öz Fontum (TTF)',
+    'settings-lbl-upload-font': 'Font Faylı Yüklə (.ttf)',
+    'font-upload-note': 'TTF və ya OTF formatında font yükləyin',
+    'settings-lbl-haptic': 'Haptic Feedback',
+    'haptic-on': 'Açıq',
+    'haptic-off': 'Qapalı',
+    'stat-lbl-appt': 'Ümumi Randevu',
+    'stat-lbl-patients': 'Xəstə Sayı',
+    'stat-lbl-income': 'Ümumi Gəlir',
+    'stat-lbl-completion': 'Tamamlanma',
+    'chart-lbl-monthly': 'Aylıq Randevu Statistikası',
+    'chart-lbl-payment': 'Ödəniş Statusu',
+    'chart-lbl-hours': 'Ən Aktiv Saatlar',
+    'backup-security': 'Təhlükəsizlik',
+    'backup-lbl-pin': 'PIN Kod (4 rəqəm)',
+    'btn-save-pin': 'PIN Yadda Saxla',
+    'btn-remove-pin': 'PIN Sil',
+    'backup-export': 'Export',
+    'backup-export-text': 'Bütün məlumatlarınızı yedəkləyin:',
+    'btn-export': 'Export Kodu Yarat',
+    'export-note': 'Bu kodu kopyalayıb saxlayın:',
+    'btn-copy-export': 'Kopyala',
+    'backup-import': 'Import',
+    'backup-import-text': 'Əvvəlcə aldığınız kodu yapışdırın:',
+    'btn-import': 'Kodu Yükləyin',
+    'backup-danger': 'Təhlükəli Bölgə',
+    'backup-danger-text': 'Bu əməl geri qaytarıla bilməz!',
+    'btn-clear-all': 'Bütün Məlumatları Sil',
+    'about-title': 'Haqqında SimpleDent',
+    'about-version': 'Versiya',
+    'about-email': 'E-poçt',
+    'about-phone': 'Telefon',
+    'about-whatsapp': 'Mesaj Göndər',
+    'confirm-title': 'Silinsin?',
+    'confirm-text': 'Bu əməl geri qaytarıla bilər (5 saniyə içində).',
+    'btn-confirm': 'Sil',
+    'btn-cancel': 'Ləğv Et',
+    'edit-title': 'Randevu Redaktə Et',
+    'btn-close-edit': 'Bağla',
+    'edit-lbl-name': 'Ad Soyadı',
+    'edit-lbl-phone': 'Telefon Nömrəsi',
+    'edit-lbl-date': 'Tarix',
+    'edit-lbl-time': 'Saat',
+    'edit-opt-time': 'Saat Seçin',
+    'edit-lbl-note': 'Qeyd',
+    'edit-lbl-amount': 'Məbləğ',
+    'edit-lbl-paid': 'Ödənilən',
+    'btn-save-edit': 'Dəyişiklikləri Saxla',
+    'btn-close-patient': 'Bağla',
+    'patient-info-title': 'Xəstə məlumatları',
+    'patient-info-lbl-phone': 'Telefon:',
+    'patient-info-lbl-debt': 'Ümumi məbləğ:',
+    'patient-info-lbl-paid': 'Ödənilən:',
+    'patient-info-lbl-remaining': 'Qalıq:',
+    'progress-lbl': 'Tamamlanma',
+    'patient-payment-title': 'Yeni ödəniş əlavə et',
+    'btn-pay': 'Ödə',
+    'patient-history-title': 'Ödəniş tarixçəsi',
+    'patient-appt-history-title': 'Randevu tarixçəsi',
+    'patient-docs-title': 'Yüklənmiş Sənədlər',
+    'undo-text': 'Randevu silindi',
+    'btn-undo': 'Geri Al',
+    'pin-title': 'PIN Daxil Edin',
+    'pin-subtitle': 'Davam etmək üçün PIN kodunuzu daxil edin',
+    'pin-clear': 'Təmizlə',
+    'pin-forgot': 'Şifrəmi Unutdum',
+    'lbl-paid-short': 'Ödənilən:',
+    'lbl-remaining-short': 'Qalıq:',
+    'lbl-amount-short': 'Məbləğ:',
+    'lbl-total-amount': 'Ümumi Məbləğ:',
+    'lbl-total-remaining-short': 'Ümumi Qalıq:',
+    'msg-no-results': 'Heç nə tapılmadı',
+    'msg-no-patient': 'Heç bir xəstə tapılmadı',
+    'msg-patient-not-found': 'Xəstə tapılmadı!',
+    'currency-azn': '₼ - Azərbaycan Manatı',
+    'currency-try': '₺ - Türk Lirası',
+    'currency-usd': '$ - Dollar',
+    'currency-eur': '€ - Euro',
+    'currency-rub': '₽ - Rubl',
+    'currency-gbp': '£ - Funt',
+    'month-short-0': 'Yan', 'month-short-1': 'Fev', 'month-short-2': 'Mar',
+    'month-short-3': 'Apr', 'month-short-4': 'May', 'month-short-5': 'İyn',
+    'month-short-6': 'İyl', 'month-short-7': 'Avq', 'month-short-8': 'Sen',
+    'month-short-9': 'Okt', 'month-short-10': 'Noy', 'month-short-11': 'Dek'
+  },
+  tr: {
+    'month-0': 'Ocak', 'month-1': 'Şubat', 'month-2': 'Mart', 'month-3': 'Nisan',
+    'month-4': 'Mayıs', 'month-5': 'Haziran', 'month-6': 'Temmuz', 'month-7': 'Ağustos',
+    'month-8': 'Eylül', 'month-9': 'Ekim', 'month-10': 'Kasım', 'month-11': 'Aralık',
+    'weekday-0': 'Pzt', 'weekday-1': 'Sal', 'weekday-2': 'Çar', 'weekday-3': 'Per',
+    'weekday-4': 'Cum', 'weekday-5': 'Cmt', 'weekday-6': 'Paz',
+    'settings-lbl-currency': 'Para Birimi',
+    'settings-lbl-phone-code': 'Telefon Kodu',
+    'settings-lbl-custom-phone': 'Özel Telefon Kodu',
+    'phone-code-az': '+994 - Azerbaycan',
+    'phone-code-tr': '+90 - Türkiye',
+    'phone-code-us': '+1 - ABD/Kanada',
+    'phone-code-uk': '+44 - Birleşik Krallık',
+    'phone-code-ru': '+7 - Rusya',
+    'phone-code-custom': 'Diğer (Özel)',
+    'no-appointments': 'Henüz randevu yok',
+    'placeholder-search': 'Ara (ad veya telefon)...',
+    'placeholder-import-code': 'Dışa aktarma kodunuzu buraya yapıştırın...',
+    'placeholder-name': 'Hastanın tam adı',
+    'placeholder-note': 'Hasta hakkında notlar...',
+    'placeholder-finance-search': 'Hasta ara (ad veya telefon)...',
+    'placeholder-income-name': 'Konsültasyon, muayene...',
+    'placeholder-expense-name': 'Kira, elektrik...',
+    'placeholder-doctor-name': 'Dr. Ad Soyad',
+    'placeholder-clinic-name': 'Klinik adı',
+    'placeholder-clinic-address': 'Adres',
+    'no-income': 'Henüz gelir eklenmedi',
+    'no-expense': 'Henüz gider eklenmedi',
+    'income-report': 'Gelir Raporu',
+    'total-income': 'Toplam Gelir:',
+    'expense-report': 'Gider Raporu',
+    'total-expense': 'Toplam Gider:',
+    'btn-import-file': 'Dosyadan İçe Aktar',
+    'doctor-info-add': 'Doktor bilgilerini ekleyin',
+    'chart-monthly': 'Aylık Randevu İstatistikleri',
+    'payment-full': 'Tam Ödendi',
+    'payment-partial': 'Kısmi Ödendi',
+    'payment-none': 'Ödenmedi',
+    'finance-total-debt': 'Toplam Tutar:',
+    'finance-total-remaining': 'Toplam Kalan:',
+    'nav-add': '+ Randevu',
+    'nav-calendar': 'Takvim',
+    'nav-finance': 'Finans',
+    'nav-settings': 'Ayarlar',
+    'nav-delete': 'Randevular',
+    'welcome-title': 'SimpleDent\'e Hoş Geldiniz',
+    'welcome-text': 'Doktorlar için randevu yönetim sistemine hoş geldiniz.<br>Başlamak için yukarıdaki menüden bir bölüm seçin.',
+    'add-title': 'Yeni Randevu',
+    'label-name': 'Ad Soyad',
+    'label-phone': 'Telefon Numarası',
+    'btn-contact': 'Kişi Seç',
+    'label-date': 'Tarih',
+    'label-time': 'Saat',
+    'opt-time': 'Saat Seçin',
+    'label-note': 'Not (Sadece sizin için)',
+    'label-amount': 'Tutar',
+    'label-paid': 'Ödenen',
+    'label-docs': 'Belgeler (Resim veya PDF)',
+    'upload-text': 'Dosya yüklemek için tıklayın',
+    'upload-hint': 'PNG, JPG veya PDF (maks. 5MB)',
+    'btn-create': 'Randevu Oluştur',
+    'finance-title': 'Finans',
+    'lbl-patient-income': 'Hasta Geliri',
+    'lbl-other-income': 'Diğer Gelirler',
+    'lbl-total': 'Toplam',
+    'lbl-expense': 'Gider',
+    'lbl-net': 'Net',
+    'tab-patients': 'Hastalar',
+    'tab-income': 'Gelir',
+    'tab-expense': 'Giderler',
+    'lbl-total-remaining': 'Toplam Hasta Kalanı',
+    'income-add-title': 'Gelir Ekle',
+    'income-lbl-name': 'Ad',
+    'income-lbl-amount': 'Tutar',
+    'income-lbl-date': 'Tarih',
+    'income-lbl-note': 'Not',
+    'btn-add-income': 'Ekle',
+    'expense-add-title': 'Gider Ekle',
+    'expense-lbl-name': 'Ad',
+    'expense-lbl-amount': 'Tutar',
+    'expense-lbl-date': 'Tarih',
+    'expense-lbl-note': 'Not',
+    'btn-add-expense': 'Ekle',
+    'calendar-title': 'Randevu Takvimi',
+    'delete-title': 'Tüm Randevular',
+    'btn-delete-all': 'Hepsini Sil',
+    'settings-title': 'Ayarlar',
+    'tab-doctor': 'Doktor',
+    'tab-appearance': 'Görünüm',
+    'tab-stats': 'İstatistikler',
+    'tab-backup': 'Yedek',
+    'settings-lbl-doctor': 'Doktor Adı',
+    'settings-lbl-clinic': 'Klinik Adı',
+    'settings-lbl-phone': 'Telefon',
+    'settings-lbl-email': 'E-posta',
+    'settings-lbl-address': 'Adres',
+    'btn-save-doctor': 'Kaydet',
+    'settings-lbl-lang': 'Dil',
+    'settings-lbl-theme': 'Tema',
+    'theme-light': 'Açık',
+    'theme-dark': 'Koyu',
+    'theme-amoled': 'AMOLED',
+    'theme-auto': 'Otomatik',
+    'settings-lbl-font': 'Yazı Tipi',
+    'font-inter': 'Inter (Standart)',
+    'font-custom': 'Kendi Fontum (TTF)',
+    'settings-lbl-upload-font': 'Font Dosyası Yükle (.ttf)',
+    'font-upload-note': 'TTF veya OTF formatında font yükleyin',
+    'settings-lbl-haptic': 'Dokunsal Geri Bildirim',
+    'haptic-on': 'Açık',
+    'haptic-off': 'Kapalı',
+    'stat-lbl-appt': 'Toplam Randevu',
+    'stat-lbl-patients': 'Hasta Sayısı',
+    'stat-lbl-income': 'Toplam Gelir',
+    'stat-lbl-completion': 'Tamamlanma',
+    'chart-lbl-monthly': 'Aylık Randevu İstatistikleri',
+    'chart-lbl-payment': 'Ödeme Durumu',
+    'chart-lbl-hours': 'En Aktif Saatler',
+    'backup-security': 'Güvenlik',
+    'backup-lbl-pin': 'PIN Kodu (4 rakam)',
+    'btn-save-pin': 'PIN Kaydet',
+    'btn-remove-pin': 'PIN Sil',
+    'backup-export': 'Dışa Aktar',
+    'backup-export-text': 'Tüm verilerinizi yedekleyin:',
+    'btn-export': 'Dışa Aktarma Kodu Oluştur',
+    'export-note': 'Bu kodu kopyalayıp saklayın:',
+    'btn-copy-export': 'Kopyala',
+    'backup-import': 'İçe Aktar',
+    'backup-import-text': 'Daha önce aldığınız kodu yapıştırın:',
+    'btn-import': 'Kodu Yükle',
+    'backup-danger': 'Tehlikeli Bölge',
+    'backup-danger-text': 'Bu işlem geri alınamaz!',
+    'btn-clear-all': 'Tüm Verileri Sil',
+    'about-title': 'SimpleDent Hakkında',
+    'about-version': 'Versiyon',
+    'about-email': 'E-posta',
+    'about-phone': 'Telefon',
+    'about-whatsapp': 'Mesaj Gönder',
+    'confirm-title': 'Silinsin mi?',
+    'confirm-text': 'Bu işlem geri alınabilir (5 saniye içinde).',
+    'btn-confirm': 'Sil',
+    'btn-cancel': 'İptal',
+    'edit-title': 'Randevu Düzenle',
+    'btn-close-edit': 'Kapat',
+    'edit-lbl-name': 'Ad Soyad',
+    'edit-lbl-phone': 'Telefon Numarası',
+    'edit-lbl-date': 'Tarih',
+    'edit-lbl-time': 'Saat',
+    'edit-opt-time': 'Saat Seçin',
+    'edit-lbl-note': 'Not',
+    'edit-lbl-amount': 'Tutar',
+    'edit-lbl-paid': 'Ödenen',
+    'btn-save-edit': 'Değişiklikleri Kaydet',
+    'btn-close-patient': 'Kapat',
+    'patient-info-title': 'Hasta Bilgileri',
+    'patient-info-lbl-phone': 'Telefon:',
+    'patient-info-lbl-debt': 'Toplam tutar:',
+    'patient-info-lbl-paid': 'Ödenen:',
+    'patient-info-lbl-remaining': 'Kalan:',
+    'progress-lbl': 'Tamamlanma',
+    'patient-payment-title': 'Yeni ödeme ekle',
+    'btn-pay': 'Öde',
+    'patient-history-title': 'Ödeme geçmişi',
+    'patient-appt-history-title': 'Randevu geçmişi',
+    'patient-docs-title': 'Yüklenen Belgeler',
+    'undo-text': 'Randevu silindi',
+    'btn-undo': 'Geri Al',
+    'pin-title': 'PIN Girin',
+    'pin-subtitle': 'Devam etmek için PIN kodunuzu girin',
+    'pin-clear': 'Temizle',
+    'pin-forgot': 'Şifremi Unuttum',
+    'lbl-paid-short': 'Ödenen:',
+    'lbl-remaining-short': 'Kalan:',
+    'lbl-amount-short': 'Tutar:',
+    'lbl-total-amount': 'Toplam Tutar:',
+    'lbl-total-remaining-short': 'Toplam Kalan:',
+    'msg-no-results': 'Hiçbir şey bulunamadı',
+    'msg-no-patient': 'Hasta bulunamadı',
+    'msg-patient-not-found': 'Hasta bulunamadı!',
+    'currency-azn': '₼ - Azerbaycan Manatı',
+    'currency-try': '₺ - Türk Lirası',
+    'currency-usd': '$ - Dolar',
+    'currency-eur': '€ - Euro',
+    'currency-rub': '₽ - Ruble',
+    'currency-gbp': '£ - Sterlin',
+    'month-short-0': 'Oca', 'month-short-1': 'Şub', 'month-short-2': 'Mar',
+    'month-short-3': 'Nis', 'month-short-4': 'May', 'month-short-5': 'Haz',
+    'month-short-6': 'Tem', 'month-short-7': 'Ağu', 'month-short-8': 'Eyl',
+    'month-short-9': 'Eki', 'month-short-10': 'Kas', 'month-short-11': 'Ara'
+  },
+  en: {
+    'month-0': 'January', 'month-1': 'February', 'month-2': 'March', 'month-3': 'April',
+    'month-4': 'May', 'month-5': 'June', 'month-6': 'July', 'month-7': 'August',
+    'month-8': 'September', 'month-9': 'October', 'month-10': 'November', 'month-11': 'December',
+    'weekday-0': 'Mon', 'weekday-1': 'Tue', 'weekday-2': 'Wed', 'weekday-3': 'Thu',
+    'weekday-4': 'Fri', 'weekday-5': 'Sat', 'weekday-6': 'Sun',
+    'settings-lbl-currency': 'Currency',
+    'settings-lbl-phone-code': 'Phone Code',
+    'settings-lbl-custom-phone': 'Custom Phone Code',
+    'phone-code-az': '+994 - Azerbaijan',
+    'phone-code-tr': '+90 - Turkey',
+    'phone-code-us': '+1 - USA/Canada',
+    'phone-code-uk': '+44 - United Kingdom',
+    'phone-code-ru': '+7 - Russia',
+    'phone-code-custom': 'Other (Custom)',
+    'no-appointments': 'No appointments yet',
+    'placeholder-search': 'Search (name or phone)...',
+    'placeholder-import-code': 'Paste your export code here...',
+    'placeholder-name': 'Patient full name',
+    'placeholder-note': 'Notes about patient...',
+    'placeholder-finance-search': 'Search patient (name or phone)...',
+    'placeholder-income-name': 'Consultation, examination...',
+    'placeholder-expense-name': 'Rent, electricity...',
+    'placeholder-doctor-name': 'Dr. Full Name',
+    'placeholder-clinic-name': 'Clinic name',
+    'placeholder-clinic-address': 'Address',
+    'no-income': 'No income added yet',
+    'no-expense': 'No expense added yet',
+    'income-report': 'Income Report',
+    'total-income': 'Total Income:',
+    'expense-report': 'Expense Report',
+    'total-expense': 'Total Expense:',
+    'btn-import-file': 'Import from File',
+    'doctor-info-add': 'Add doctor information',
+    'chart-monthly': 'Monthly Appointment Statistics',
+    'payment-full': 'Fully Paid',
+    'payment-partial': 'Partially Paid',
+    'payment-none': 'Not Paid',
+    'finance-total-debt': 'Total Amount:',
+    'finance-total-remaining': 'Total Remaining:',
+    'nav-add': '+ Appointment',
+    'nav-calendar': 'Calendar',
+    'nav-finance': 'Finance',
+    'nav-settings': 'Settings',
+    'nav-delete': 'Appointments',
+    'welcome-title': 'Welcome to SimpleDent',
+    'welcome-text': 'Welcome to the appointment management system for doctors.<br>Select a section from the menu above to get started.',
+    'add-title': 'New Appointment',
+    'label-name': 'Full Name',
+    'label-phone': 'Phone Number',
+    'btn-contact': 'Select Contact',
+    'label-date': 'Date',
+    'label-time': 'Time',
+    'opt-time': 'Select Time',
+    'label-note': 'Note (For you only)',
+    'label-amount': 'Amount',
+    'label-paid': 'Paid',
+    'label-docs': 'Documents (Image or PDF)',
+    'upload-text': 'Click to upload files',
+    'upload-hint': 'PNG, JPG or PDF (max. 5MB)',
+    'btn-create': 'Create Appointment',
+    'finance-title': 'Finance',
+    'lbl-patient-income': 'Patient Income',
+    'lbl-other-income': 'Other Income',
+    'lbl-total': 'Total',
+    'lbl-expense': 'Expense',
+    'lbl-net': 'Net',
+    'tab-patients': 'Patients',
+    'tab-income': 'Income',
+    'tab-expense': 'Expenses',
+    'lbl-total-remaining': 'Total Patient Balance',
+    'income-add-title': 'Add Income',
+    'income-lbl-name': 'Name',
+    'income-lbl-amount': 'Amount',
+    'income-lbl-date': 'Date',
+    'income-lbl-note': 'Note',
+    'btn-add-income': 'Add',
+    'expense-add-title': 'Add Expense',
+    'expense-lbl-name': 'Name',
+    'expense-lbl-amount': 'Amount',
+    'expense-lbl-date': 'Date',
+    'expense-lbl-note': 'Note',
+    'btn-add-expense': 'Add',
+    'calendar-title': 'Appointment Calendar',
+    'delete-title': 'All Appointments',
+    'btn-delete-all': 'Delete All',
+    'settings-title': 'Settings',
+    'tab-doctor': 'Doctor',
+    'tab-appearance': 'Appearance',
+    'tab-stats': 'Statistics',
+    'tab-backup': 'Backup',
+    'settings-lbl-doctor': 'Doctor Name',
+    'settings-lbl-clinic': 'Clinic Name',
+    'settings-lbl-phone': 'Phone',
+    'settings-lbl-email': 'Email',
+    'settings-lbl-address': 'Address',
+    'btn-save-doctor': 'Save',
+    'settings-lbl-lang': 'Language',
+    'settings-lbl-theme': 'Theme',
+    'theme-light': 'Light',
+    'theme-dark': 'Dark',
+    'theme-amoled': 'AMOLED',
+    'theme-auto': 'Auto',
+    'settings-lbl-font': 'Font',
+    'font-inter': 'Inter (Default)',
+    'font-custom': 'My Font (TTF)',
+    'settings-lbl-upload-font': 'Upload Font File (.ttf)',
+    'font-upload-note': 'Upload font in TTF or OTF format',
+    'settings-lbl-haptic': 'Haptic Feedback',
+    'haptic-on': 'On',
+    'haptic-off': 'Off',
+    'stat-lbl-appt': 'Total Appointments',
+    'stat-lbl-patients': 'Patient Count',
+    'stat-lbl-income': 'Total Income',
+    'stat-lbl-completion': 'Completion',
+    'chart-lbl-monthly': 'Monthly Appointment Statistics',
+    'chart-lbl-payment': 'Payment Status',
+    'chart-lbl-hours': 'Most Active Hours',
+    'backup-security': 'Security',
+    'backup-lbl-pin': 'PIN Code (4 digits)',
+    'btn-save-pin': 'Save PIN',
+    'btn-remove-pin': 'Remove PIN',
+    'backup-export': 'Export',
+    'backup-export-text': 'Backup all your data:',
+    'btn-export': 'Create Export Code',
+    'export-note': 'Copy and save this code:',
+    'btn-copy-export': 'Copy',
+    'backup-import': 'Import',
+    'backup-import-text': 'Paste the code you received earlier:',
+    'btn-import': 'Load Code',
+    'backup-danger': 'Danger Zone',
+    'backup-danger-text': 'This action cannot be undone!',
+    'btn-clear-all': 'Delete All Data',
+    'about-title': 'About SimpleDent',
+    'about-version': 'Version',
+    'about-email': 'Email',
+    'about-phone': 'Phone',
+    'about-whatsapp': 'Send Message',
+    'confirm-title': 'Delete?',
+    'confirm-text': 'This action can be undone (within 5 seconds).',
+    'btn-confirm': 'Delete',
+    'btn-cancel': 'Cancel',
+    'edit-title': 'Edit Appointment',
+    'btn-close-edit': 'Close',
+    'edit-lbl-name': 'Full Name',
+    'edit-lbl-phone': 'Phone Number',
+    'edit-lbl-date': 'Date',
+    'edit-lbl-time': 'Time',
+    'edit-opt-time': 'Select Time',
+    'edit-lbl-note': 'Note',
+    'edit-lbl-amount': 'Amount',
+    'edit-lbl-paid': 'Paid',
+    'btn-save-edit': 'Save Changes',
+    'btn-close-patient': 'Close',
+    'patient-info-title': 'Patient Information',
+    'patient-info-lbl-phone': 'Phone:',
+    'patient-info-lbl-debt': 'Total amount:',
+    'patient-info-lbl-paid': 'Paid:',
+    'patient-info-lbl-remaining': 'Balance:',
+    'progress-lbl': 'Completion',
+    'patient-payment-title': 'Add new payment',
+    'btn-pay': 'Pay',
+    'patient-history-title': 'Payment history',
+    'patient-appt-history-title': 'Appointment history',
+    'patient-docs-title': 'Uploaded Documents',
+    'undo-text': 'Appointment deleted',
+    'btn-undo': 'Undo',
+    'pin-title': 'Enter PIN',
+    'pin-subtitle': 'Enter your PIN code to continue',
+    'pin-clear': 'Clear',
+    'pin-forgot': 'Forgot Password',
+    'lbl-paid-short': 'Paid:',
+    'lbl-remaining-short': 'Balance:',
+    'lbl-amount-short': 'Amount:',
+    'lbl-total-amount': 'Total Amount:',
+    'lbl-total-remaining-short': 'Total Balance:',
+    'msg-no-results': 'Nothing found',
+    'msg-no-patient': 'No patient found',
+    'msg-patient-not-found': 'Patient not found!',
+    'currency-azn': '₼ - Azerbaijani Manat',
+    'currency-try': '₺ - Turkish Lira',
+    'currency-usd': '$ - Dollar',
+    'currency-eur': '€ - Euro',
+    'currency-rub': '₽ - Ruble',
+    'currency-gbp': '£ - Pound',
+    'month-short-0': 'Jan', 'month-short-1': 'Feb', 'month-short-2': 'Mar',
+    'month-short-3': 'Apr', 'month-short-4': 'May', 'month-short-5': 'Jun',
+    'month-short-6': 'Jul', 'month-short-7': 'Aug', 'month-short-8': 'Sep',
+    'month-short-9': 'Oct', 'month-short-10': 'Nov', 'month-short-11': 'Dec'
+  },
+  ru: {
+    'month-0': 'Январь', 'month-1': 'Февраль', 'month-2': 'Март', 'month-3': 'Апрель',
+    'month-4': 'Май', 'month-5': 'Июнь', 'month-6': 'Июль', 'month-7': 'Август',
+    'month-8': 'Сентябрь', 'month-9': 'Октябрь', 'month-10': 'Ноябрь', 'month-11': 'Декабрь',
+    'weekday-0': 'Пн', 'weekday-1': 'Вт', 'weekday-2': 'Ср', 'weekday-3': 'Чт',
+    'weekday-4': 'Пт', 'weekday-5': 'Сб', 'weekday-6': 'Вс',
+    'settings-lbl-currency': 'Валюта',
+    'settings-lbl-phone-code': 'Телефонный код',
+    'settings-lbl-custom-phone': 'Пользовательский код',
+    'phone-code-az': '+994 - Азербайджан',
+    'phone-code-tr': '+90 - Турция',
+    'phone-code-us': '+1 - США/Канада',
+    'phone-code-uk': '+44 - Великобритания',
+    'phone-code-ru': '+7 - Россия',
+    'phone-code-custom': 'Другой (Пользовательский)',
+    'no-appointments': 'Пока нет записей',
+    'placeholder-search': 'Поиск (имя или телефон)...',
+    'placeholder-import-code': 'Вставьте код экспорта сюда...',
+    'placeholder-name': 'Полное имя пациента',
+    'placeholder-note': 'Заметки о пациенте...',
+    'placeholder-finance-search': 'Поиск пациента (имя или телефон)...',
+    'placeholder-income-name': 'Консультация, осмотр...',
+    'placeholder-expense-name': 'Аренда, электричество...',
+    'placeholder-doctor-name': 'Др. Имя Фамилия',
+    'placeholder-clinic-name': 'Название клиники',
+    'placeholder-clinic-address': 'Адрес',
+    'no-income': 'Доходов еще не добавлено',
+    'no-expense': 'Расходов еще не добавлено',
+    'income-report': 'Отчет о доходах',
+    'total-income': 'Общий доход:',
+    'expense-report': 'Отчет о расходах',
+    'total-expense': 'Общий расход:',
+    'btn-import-file': 'Импорт из файла',
+    'doctor-info-add': 'Добавить информацию о враче',
+    'chart-monthly': 'Месячная статистика записей',
+    'payment-full': 'Полностью оплачено',
+    'payment-partial': 'Частично оплачено',
+    'payment-none': 'Не оплачено',
+    'finance-total-debt': 'Общая сумма:',
+    'finance-total-remaining': 'Общий остаток:',
+    'nav-add': '+ Запись',
+    'nav-calendar': 'Календарь',
+    'nav-finance': 'Финансы',
+    'nav-settings': 'Настройки',
+    'nav-delete': 'Записи',
+    'welcome-title': 'Добро пожаловать в SimpleDent',
+    'welcome-text': 'Добро пожаловать в систему управления записями для врачей.<br>Выберите раздел из меню выше, чтобы начать.',
+    'add-title': 'Новая запись',
+    'label-name': 'ФИО',
+    'label-phone': 'Номер телефона',
+    'btn-contact': 'Выбрать контакт',
+    'label-date': 'Дата',
+    'label-time': 'Время',
+    'opt-time': 'Выберите время',
+    'label-note': 'Примечание (Только для вас)',
+    'label-amount': 'Сумма',
+    'label-paid': 'Оплачено',
+    'label-docs': 'Документы (Изображение или PDF)',
+    'upload-text': 'Нажмите для загрузки файлов',
+    'upload-hint': 'PNG, JPG или PDF (макс. 5МБ)',
+    'btn-create': 'Создать запись',
+    'finance-title': 'Финансы',
+    'lbl-patient-income': 'Доход от пациентов',
+    'lbl-other-income': 'Прочие доходы',
+    'lbl-total': 'Всего',
+    'lbl-expense': 'Расход',
+    'lbl-net': 'Чистый',
+    'tab-patients': 'Пациенты',
+    'tab-income': 'Доход',
+    'tab-expense': 'Расходы',
+    'lbl-total-remaining': 'Общий остаток пациентов',
+    'income-add-title': 'Добавить доход',
+    'income-lbl-name': 'Название',
+    'income-lbl-amount': 'Сумма',
+    'income-lbl-date': 'Дата',
+    'income-lbl-note': 'Примечание',
+    'btn-add-income': 'Добавить',
+    'expense-add-title': 'Добавить расход',
+    'expense-lbl-name': 'Название',
+    'expense-lbl-amount': 'Сумма',
+    'expense-lbl-date': 'Дата',
+    'expense-lbl-note': 'Примечание',
+    'btn-add-expense': 'Добавить',
+    'calendar-title': 'Календарь записей',
+    'delete-title': 'Все записи',
+    'btn-delete-all': 'Удалить все',
+    'settings-title': 'Настройки',
+    'tab-doctor': 'Врач',
+    'tab-appearance': 'Внешний вид',
+    'tab-stats': 'Статистика',
+    'tab-backup': 'Резервная копия',
+    'settings-lbl-doctor': 'Имя врача',
+    'settings-lbl-clinic': 'Название клиники',
+    'settings-lbl-phone': 'Телефон',
+    'settings-lbl-email': 'Email',
+    'settings-lbl-address': 'Адрес',
+    'btn-save-doctor': 'Сохранить',
+    'settings-lbl-lang': 'Язык',
+    'settings-lbl-theme': 'Тема',
+    'theme-light': 'Светлая',
+    'theme-dark': 'Темная',
+    'theme-amoled': 'AMOLED',
+    'theme-auto': 'Авто',
+    'settings-lbl-font': 'Шрифт',
+    'font-inter': 'Inter (По умолчанию)',
+    'font-custom': 'Мой шрифт (TTF)',
+    'settings-lbl-upload-font': 'Загрузить файл шрифта (.ttf)',
+    'font-upload-note': 'Загрузите шрифт в формате TTF или OTF',
+    'settings-lbl-haptic': 'Тактильная обратная связь',
+    'haptic-on': 'Вкл',
+    'haptic-off': 'Выкл',
+    'stat-lbl-appt': 'Всего записей',
+    'stat-lbl-patients': 'Количество пациентов',
+    'stat-lbl-income': 'Общий доход',
+    'stat-lbl-completion': 'Завершено',
+    'chart-lbl-monthly': 'Месячная статистика записей',
+    'chart-lbl-payment': 'Статус оплаты',
+    'chart-lbl-hours': 'Самые активные часы',
+    'backup-security': 'Безопасность',
+    'backup-lbl-pin': 'PIN-код (4 цифры)',
+    'btn-save-pin': 'Сохранить PIN',
+    'btn-remove-pin': 'Удалить PIN',
+    'backup-export': 'Экспорт',
+    'backup-export-text': 'Создайте резервную копию всех данных:',
+    'btn-export': 'Создать код экспорта',
+    'export-note': 'Скопируйте и сохраните этот код:',
+    'btn-copy-export': 'Копировать',
+    'backup-import': 'Импорт',
+    'backup-import-text': 'Вставьте полученный ранее код:',
+    'btn-import': 'Загрузить код',
+    'backup-danger': 'Опасная зона',
+    'backup-danger-text': 'Это действие нельзя отменить!',
+    'btn-clear-all': 'Удалить все данные',
+    'about-title': 'О SimpleDent',
+    'about-version': 'Версия',
+    'about-email': 'Email',
+    'about-phone': 'Телефон',
+    'about-whatsapp': 'Отправить сообщение',
+    'confirm-title': 'Удалить?',
+    'confirm-text': 'Это действие можно отменить (в течение 5 секунд).',
+    'btn-confirm': 'Удалить',
+    'btn-cancel': 'Отмена',
+    'edit-title': 'Редактировать запись',
+    'btn-close-edit': 'Закрыть',
+    'edit-lbl-name': 'ФИО',
+    'edit-lbl-phone': 'Номер телефона',
+    'edit-lbl-date': 'Дата',
+    'edit-lbl-time': 'Время',
+    'edit-opt-time': 'Выберите время',
+    'edit-lbl-note': 'Примечание',
+    'edit-lbl-amount': 'Сумма',
+    'edit-lbl-paid': 'Оплачено',
+    'btn-save-edit': 'Сохранить изменения',
+    'btn-close-patient': 'Закрыть',
+    'patient-info-title': 'Информация о пациенте',
+    'patient-info-lbl-phone': 'Телефон:',
+    'patient-info-lbl-debt': 'Общая сумма:',
+    'patient-info-lbl-paid': 'Оплачено:',
+    'patient-info-lbl-remaining': 'Остаток:',
+    'progress-lbl': 'Завершено',
+    'patient-payment-title': 'Добавить новый платеж',
+    'btn-pay': 'Оплатить',
+    'patient-history-title': 'История платежей',
+    'patient-appt-history-title': 'История записей',
+    'patient-docs-title': 'Загруженные документы',
+    'undo-text': 'Запись удалена',
+    'btn-undo': 'Отменить',
+    'pin-title': 'Введите PIN',
+    'pin-subtitle': 'Введите свой PIN-код для продолжения',
+    'pin-clear': 'Очистить',
+    'pin-forgot': 'Забыли пароль',
+    'lbl-paid-short': 'Оплачено:',
+    'lbl-remaining-short': 'Остаток:',
+    'lbl-amount-short': 'Сумма:',
+    'lbl-total-amount': 'Общая сумма:',
+    'lbl-total-remaining-short': 'Общий остаток:',
+    'msg-no-results': 'Ничего не найдено',
+    'msg-no-patient': 'Пациент не найден',
+    'msg-patient-not-found': 'Пациент не найден!',
+    'currency-azn': '₼ - Азербайджанский манат',
+    'currency-try': '₺ - Турецкая лира',
+    'currency-usd': '$ - Доллар',
+    'currency-eur': '€ - Евро',
+    'currency-rub': '₽ - Рубль',
+    'currency-gbp': '£ - Фунт',
+    'month-short-0': 'Янв', 'month-short-1': 'Фев', 'month-short-2': 'Мар',
+    'month-short-3': 'Апр', 'month-short-4': 'Май', 'month-short-5': 'Июн',
+    'month-short-6': 'Июл', 'month-short-7': 'Авг', 'month-short-8': 'Сен',
+    'month-short-9': 'Окт', 'month-short-10': 'Ноя', 'month-short-11': 'Дек'
+  }
+};
+
+let currentLanguage = localStorage.getItem("language") || "az";
+let hapticEnabled = localStorage.getItem("haptic") !== "off";
+
+function getCurrency() {
+  return localStorage.getItem('currency') || '₼';
+}
+
+function updateCurrencyLabels() {
+  const currency = getCurrency();
+  const trans = translations[currentLanguage] || translations.az;
+  
+  // Update all amount/paid labels with currency
+  const labelIds = [
+    'label-amount', 'label-paid', 
+    'income-lbl-amount', 'expense-lbl-amount',
+    'edit-lbl-amount', 'edit-lbl-paid'
+  ];
+  
+  labelIds.forEach(id => {
+    const elem = document.getElementById(id);
+    if (elem && trans[id]) {
+      elem.textContent = trans[id] + ' (' + currency + ')';
+    }
+  });
+  
+  // Update placeholder for modal payment input
+  const paymentInput = document.getElementById('modal-payment-input');
+  if (paymentInput) {
+    paymentInput.placeholder = trans['label-amount'] ? (trans['label-amount'] + ' (' + currency + ')') : ('Məbləğ (' + currency + ')');
+  }
+}
+
+function triggerHaptic() {
+  if (!hapticEnabled) return;
+  if (navigator.vibrate) {
+    navigator.vibrate(10);
+  }
+}
+
+function toggleHaptic(value) {
+  hapticEnabled = value === "on";
+  localStorage.setItem("haptic", value);
+  const trans = translations[currentLanguage] || translations.az;
+  const messages = {
+    az: { on: 'Haptic açıldı', off: 'Haptic bağlandı' },
+    tr: { on: 'Haptic açıldı', off: 'Haptic kapatıldı' },
+    en: { on: 'Haptic enabled', off: 'Haptic disabled' },
+    ru: { on: 'Тактильная связь включена', off: 'Тактильная связь отключена' }
+  };
+  const msg = messages[currentLanguage] || messages.az;
+  showToast(hapticEnabled ? msg.on : msg.off, 'success');
+  triggerHaptic();
+}
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem("language", lang);
+  updateLanguage();
+  
+  const toastMessages = {
+    az: 'Dil dəyişdirildi',
+    tr: 'Dil değiştirildi',
+    en: 'Language changed',
+    ru: 'Язык изменен'
+  };
+  showToast(toastMessages[lang] || toastMessages.az, 'success');
+  triggerHaptic();
+  
+  // Update currency labels
+  updateCurrencyLabels();
+  
+  // Update all placeholders
+  const placeholderIds = ['name', 'phone', 'note', 'debt', 'paid', 'search', 'finance-search', 
+    'income-name', 'income-amount', 'income-note', 'expense-name', 'expense-amount', 'expense-note',
+    'doctor-name', 'clinic-name', 'doctor-phone', 'doctor-email', 'clinic-address', 'pin-input', 'import-code'];
+  
+  placeholderIds.forEach(id => {
+    const elem = document.getElementById(id);
+    const key = 'placeholder-' + id;
+    if (elem && translations[currentLanguage][key]) {
+      elem.placeholder = translations[currentLanguage][key];
+    }
+  });
+  
+  // Update phone code select options
+  const phoneSelect = document.getElementById('phone-code-select');
+  if(phoneSelect) {
+    phoneSelect.options[0].text = translations[currentLanguage]['phone-code-az'];
+    phoneSelect.options[1].text = translations[currentLanguage]['phone-code-tr'];
+    phoneSelect.options[2].text = translations[currentLanguage]['phone-code-us'];
+    phoneSelect.options[3].text = translations[currentLanguage]['phone-code-uk'];
+    phoneSelect.options[4].text = translations[currentLanguage]['phone-code-ru'];
+    phoneSelect.options[5].text = translations[currentLanguage]['phone-code-custom'];
+  }
+  
+  // Update currency select options
+  const currencySelect = document.getElementById('currency-select');
+  if(currencySelect) {
+    document.getElementById('currency-azn').textContent = translations[currentLanguage]['currency-azn'];
+    document.getElementById('currency-try').textContent = translations[currentLanguage]['currency-try'];
+    document.getElementById('currency-usd').textContent = translations[currentLanguage]['currency-usd'];
+    document.getElementById('currency-eur').textContent = translations[currentLanguage]['currency-eur'];
+    document.getElementById('currency-rub').textContent = translations[currentLanguage]['currency-rub'];
+    document.getElementById('currency-gbp').textContent = translations[currentLanguage]['currency-gbp'];
+  }
+  
+  // Reload current page to update content
+  if(currentPage === 'calendar') {
+    initMonths();
+    buildCalendar();
+  }
+  if(currentPage === 'finance') {
+    showFinance();
+  }
+  if(currentPage === 'delete') {
+    showDelete();
+  }
+  if(currentPage === 'settings') {
+    displayDoctorInfo();
+  }
+}
+
+function updateLanguage() {
+  const trans = translations[currentLanguage] || translations.az;
+  
+  Object.keys(trans).forEach(key => {
+    const element = document.getElementById(key);
+    if (element) {
+      if (element.tagName === 'INPUT' && element.type !== 'button') {
+        element.placeholder = trans[key];
+      } else {
+        if (element.innerHTML.indexOf('<') === -1) {
+          element.textContent = trans[key];
+        } else {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = trans[key];
+          element.textContent = tempDiv.textContent;
+        }
+      }
+    }
+  });
+  
+  document.getElementById("language-select").value = currentLanguage;
+  
+  // Update currency labels
+  updateCurrencyLabels();
+}
+
+let data = JSON.parse(localStorage.getItem("randevu")) || [];
+let incomeData = JSON.parse(localStorage.getItem("income")) || [];
+let expenseData = JSON.parse(localStorage.getItem("expense")) || [];
+let lastDeleted = null;
+let undoTimer = null;
+let doctorInfo = JSON.parse(localStorage.getItem("doctorInfo")) || {};
+let currentPage = 'welcome';
+let selectedDate = null;
+let currentPatient = null;
+let pendingDelete = null;
+let editingIndex = null;
+let uploadedFiles = {};
+
+let pinCode = localStorage.getItem("pinCode") || null;
+let currentPin = "";
+let isAuthenticated = false;
+
+function showToast(message, type = 'info', duration = 3000) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: '✓',
+    error: '✗',
+    warning: '⚠',
+    info: 'ℹ'
+  };
+  
+  toast.innerHTML = `
+    <div class="toast-icon">${icons[type] || icons.info}</div>
+    <div class="toast-content">
+      <div class="toast-message">${message}</div>
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+  `;
+  
+  container.appendChild(toast);
+  triggerHaptic();
+  
+  setTimeout(() => {
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+function handleFiles(files) {
+  const uploadedFilesDiv = document.getElementById('uploaded-files');
+  
+  for (let file of files) {
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Fayl çox böyükdür! Maksimum 5MB', 'error');
+      continue;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const fileId = Date.now() + '_' + Math.random();
+      uploadedFiles[fileId] = {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        data: e.target.result
+      };
+      
+      displayUploadedFile(fileId, file);
+    };
+    reader.readAsDataURL(file);
+  }
+  triggerHaptic();
+}
+
+function displayUploadedFile(fileId, file) {
+  const uploadedFilesDiv = document.getElementById('uploaded-files');
+  
+  const fileDiv = document.createElement('div');
+  fileDiv.className = 'uploaded-file';
+  fileDiv.id = `file-${fileId}`;
+  
+  const iconText = file.type.startsWith('image/') ? '🖼️' : '📄';
+  const iconClass = file.type.startsWith('image/') ? 'image' : 'pdf';
+  const fileSize = (file.size / 1024).toFixed(1) + ' KB';
+  
+  fileDiv.innerHTML = `
+    <div class="file-icon ${iconClass}">${iconText}</div>
+    <div class="file-info">
+      <div class="file-name">${file.name}</div>
+      <div class="file-size">${fileSize}</div>
+    </div>
+    <div class="file-actions">
+      <button class="file-action-btn" onclick="viewFile('${fileId}')">👁</button>
+      <button class="file-action-btn delete" onclick="removeFile('${fileId}')">×</button>
+    </div>
+  `;
+  
+  uploadedFilesDiv.appendChild(fileDiv);
+}
+
+function removeFile(fileId) {
+  delete uploadedFiles[fileId];
+  document.getElementById(`file-${fileId}`).remove();
+  showToast('Fayl silindi', 'success');
+  triggerHaptic();
+}
+
+function viewFile(fileId) {
+  const file = uploadedFiles[fileId];
+  if (!file) return;
+  
+  const win = window.open();
+  if (file.type.startsWith('image/')) {
+    win.document.write(`<img src="${file.data}" style="max-width:100%; height:auto;">`);
+  } else {
+    win.document.write(`<iframe src="${file.data}" style="width:100%; height:100vh; border:none;"></iframe>`);
+  }
+  triggerHaptic();
+}
+
+const uploadArea = document.getElementById('upload-area');
+if (uploadArea) {
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+  
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+  
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+}
+
+function updateStatistics() {
+  document.getElementById('total-appointments').textContent = data.length;
+  
+  const uniquePatients = new Set(data.map(d => d.phone)).size;
+  document.getElementById('total-patients').textContent = uniquePatients;
+  
+  let totalIncome = 0;
+  data.forEach(d => {
+    totalIncome += parseFloat(d.paid) || 0;
+  });
+  document.getElementById('stat-income').textContent = totalIncome.toFixed(2) + getCurrency();
+  
+  let totalDebt = 0;
+  let totalPaid = 0;
+  data.forEach(d => {
+    totalDebt += parseFloat(d.debt) || 0;
+    totalPaid += parseFloat(d.paid) || 0;
+  });
+  const completionRate = totalDebt > 0 ? ((totalPaid / totalDebt) * 100).toFixed(0) : 0;
+  document.getElementById('completion-rate').textContent = completionRate + '%';
+  
+  updateMonthlyChart();
+  updateTimeChart();
+  updatePaymentStatusChart();
+}
+
+function updateMonthlyChart() {
+  const monthCounts = {};
+  const trans = translations[currentLanguage] || translations.az;
+  const monthNames = [];
+  for(let i = 0; i < 12; i++) {
+    monthNames.push(trans['month-short-' + i] || trans['month-' + i].substring(0, 3));
+  }
+  
+  data.forEach(d => {
+    const date = new Date(d.date);
+    const monthKey = `${monthNames[date.getMonth()]}`;
+    monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
+  });
+  
+  const chartDiv = document.getElementById('monthly-chart');
+  chartDiv.innerHTML = '';
+  
+  const maxValue = Math.max(...Object.values(monthCounts), 1);
+  
+  for (let month of monthNames) {
+    const count = monthCounts[month] || 0;
+    const height = (count / maxValue) * 100;
+    
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = height + '%';
+    bar.innerHTML = `
+      <div class="bar-value">${count}</div>
+      <div class="bar-label">${month}</div>
+    `;
+    chartDiv.appendChild(bar);
+  }
+}
+
+function updateTimeChart() {
+  const timeCounts = {};
+  
+  data.forEach(d => {
+    const hour = d.time ? d.time.split(':')[0] : '00';
+    timeCounts[hour] = (timeCounts[hour] || 0) + 1;
+  });
+  
+  const chartDiv = document.getElementById('time-chart');
+  chartDiv.innerHTML = '';
+  
+  const maxValue = Math.max(...Object.values(timeCounts), 1);
+  
+  for (let hour = 9; hour <= 18; hour++) {
+    const hourStr = String(hour).padStart(2, '0');
+    const count = timeCounts[hourStr] || 0;
+    const height = (count / maxValue) * 100;
+    
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = height + '%';
+    bar.innerHTML = `
+      <div class="bar-value">${count}</div>
+      <div class="bar-label">${hourStr}:00</div>
+    `;
+    chartDiv.appendChild(bar);
+  }
+}
+
+function updatePaymentStatusChart() {
+  let fullPaid = 0;
+  let partialPaid = 0;
+  let unpaid = 0;
+  
+  data.forEach(d => {
+    const debt = parseFloat(d.debt) || 0;
+    const paid = parseFloat(d.paid) || 0;
+    
+    if (paid >= debt) fullPaid++;
+    else if (paid > 0) partialPaid++;
+    else unpaid++;
+  });
+  
+  const total = data.length || 1;
+  const trans = translations[currentLanguage] || translations.az;
+  
+  const chartDiv = document.getElementById('payment-status-chart');
+  chartDiv.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+        <span style="font-size:13px; color:var(--text);">${trans['payment-full']}</span>
+        <span style="font-size:13px; font-weight:600; color:var(--success);">${fullPaid} (${((fullPaid/total)*100).toFixed(0)}%)</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width:${(fullPaid/total)*100}%; background:var(--success);"></div>
+      </div>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+        <span style="font-size:13px; color:var(--text);">${trans['payment-partial']}</span>
+        <span style="font-size:13px; font-weight:600; color:var(--warning);">${partialPaid} (${((partialPaid/total)*100).toFixed(0)}%)</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width:${(partialPaid/total)*100}%; background:var(--warning);"></div>
+      </div>
+    </div>
+    
+    <div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+        <span style="font-size:13px; color:var(--text);">${trans['payment-none']}</span>
+        <span style="font-size:13px; font-weight:600; color:var(--danger);">${unpaid} (${((unpaid/total)*100).toFixed(0)}%)</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width:${(unpaid/total)*100}%; background:var(--danger);"></div>
+      </div>
+    </div>
+  `;
+}
+
+function formatDate(dateStr) {
+  if(!dateStr) return '';
+  const [year, month, day] = dateStr.split('-');
+  return `${day}.${month}.${year}`;
+}
+
+function formatDateWithTime(timestamp) {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hour = String(date.getHours()).padStart(2, '0');
+  const minute = String(date.getMinutes()).padStart(2, '0');
+  return `${day}.${month}.${year} ${hour}:${minute}`;
+}
+
+function checkPinRequired() {
+  if (pinCode && !isAuthenticated) {
+    document.getElementById("pin-screen").classList.add("active");
+    document.body.style.overflow = "hidden";
+    return true;
+  }
+  return false;
+}
+
+function forgotPin() {
+  if (confirm("PIN kodu sıfırlamaq istəyirsiniz? Applikasiya məlumatları silinəcək!")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+function enterPin(digit) {
+  if (currentPin.length < 4) {
+    currentPin += digit;
+    updatePinDots();
+    triggerHaptic();
+    
+    if (currentPin.length === 4) {
+      checkPin();
+    }
+  }
+}
+
+function deletePin() {
+  if (currentPin.length > 0) {
+    currentPin = currentPin.slice(0, -1);
+    updatePinDots();
+    document.getElementById("pin-message").textContent = "";
+    triggerHaptic();
+  }
+}
+
+function clearPin() {
+  currentPin = "";
+  updatePinDots();
+  document.getElementById("pin-message").textContent = "";
+  triggerHaptic();
+}
+
+function updatePinDots() {
+  const dots = document.querySelectorAll(".pin-dot");
+  dots.forEach((dot, index) => {
+    if (index < currentPin.length) {
+      dot.classList.add("filled");
+    } else {
+      dot.classList.remove("filled");
+    }
+  });
+}
+
+function checkPin() {
+  if (currentPin === pinCode) {
+    isAuthenticated = true;
+    document.getElementById("pin-screen").classList.remove("active");
+    document.body.style.overflow = "auto";
+    currentPin = "";
+    updatePinDots();
+    document.getElementById("pin-message").textContent = "";
+    showToast('Giriş uğurlu!', 'success');
+    triggerHaptic();
+  } else {
+    document.getElementById("pin-message").textContent = "Yanlış PIN kod!";
+    triggerHaptic();
+    triggerHaptic();
+    setTimeout(() => {
+      currentPin = "";
+      updatePinDots();
+      document.getElementById("pin-message").textContent = "";
+    }, 1000);
+  }
+}
+
+function savePinCode() {
+  const newPin = document.getElementById("pin-input").value.trim();
+  
+  if (!newPin) {
+    showToast('PIN kod daxil edin!', 'error');
+    return;
+  }
+  
+  if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+    showToast('PIN kod 4 rəqəmdən ibarət olmalıdır!', 'error');
+    return;
+  }
+  
+  pinCode = newPin;
+  localStorage.setItem("pinCode", pinCode);
+  document.getElementById("pin-input").value = "";
+  showToast('PIN kod yadda saxlanıldı!', 'success');
+  triggerHaptic();
+}
+
+function removePinCode() {
+  if (!confirm("PIN kodu silmək istədiyinizə əminsiniz?")) return;
+  
+  pinCode = null;
+  isAuthenticated = false;
+  localStorage.removeItem("pinCode");
+  showToast('PIN kod silindi!', 'success');
+  triggerHaptic();
+}
+
+function applyAutoTheme() {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  
+  if (savedTheme === "auto") {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.body.classList.remove("dark", "amoled", "light");
+    if (prefersDark) {
+      document.body.classList.add("dark");
+    }
+  }
+}
+
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    if (savedTheme === "auto") {
+      applyAutoTheme();
+    }
+  });
+}
+
+function loadTheme(){
+  const savedTheme = localStorage.getItem("theme") || "light";
+  document.body.classList.remove("dark","amoled","light");
+  
+  if(savedTheme === "auto") {
+    applyAutoTheme();
+  } else if(savedTheme !== "light") {
+    document.body.classList.add(savedTheme);
+  }
+  
+  document.getElementById("theme-select").value = savedTheme;
+}
+
+function setTheme(t){
+  document.body.classList.remove("dark","amoled");
+  
+  if(t === "auto") {
+    applyAutoTheme();
+  } else if(t !== "light") {
+    document.body.classList.add(t);
+  }
+  
+  localStorage.setItem("theme", t);
+  showToast('Tema dəyişdirildi', 'success');
+  triggerHaptic();
+}
+
+function loadFont(){
+  const savedFont = localStorage.getItem("font") || "Inter";
+  const customFontData = localStorage.getItem("customFontData");
+  
+  if(savedFont === "CustomFont" && customFontData) {
+    loadCustomFontFromStorage();
+  }
+  
+  setFont(savedFont);
+  document.getElementById("font-select").value = savedFont;
+  
+  if(savedFont === "CustomFont") {
+    document.getElementById("custom-font-upload").style.display = "block";
+  }
+}
+
+function setFont(fontName){
+  if(fontName === "CustomFont") {
+    document.getElementById("custom-font-upload").style.display = "block";
+    const customFontData = localStorage.getItem("customFontData");
+    if(customFontData) {
+      document.documentElement.style.setProperty('--font-family', `'CustomFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+    } else {
+      showToast('Əvvəlcə font faylı yükləyin!', 'warning');
+      return;
+    }
+  } else {
+    document.getElementById("custom-font-upload").style.display = "none";
+    document.documentElement.style.setProperty('--font-family', `'${fontName}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+  }
+  localStorage.setItem("font", fontName);
+  triggerHaptic();
+}
+
+function uploadCustomFont(files){
+  if(!files || files.length === 0) return;
+  
+  const file = files[0];
+  if(!file.name.endsWith('.ttf') && !file.name.endsWith('.otf')) {
+    showToast('Yalnız TTF və ya OTF formatında font yükləyin!', 'error');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const fontData = e.target.result;
+    localStorage.setItem("customFontData", fontData);
+    loadCustomFontFromStorage();
+    showToast('Font yükləndi!', 'success');
+    triggerHaptic();
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadCustomFontFromStorage(){
+  const fontData = localStorage.getItem("customFontData");
+  if(!fontData) return;
+  
+  const style = document.createElement('style');
+  style.textContent = `
+    @font-face {
+      font-family: 'CustomFont';
+      src: url('${fontData}') format('truetype');
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function showPage(p){
+  ["welcome","add","settings","calendar","finance","delete"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+  
+  ["add","settings","calendar","finance","delete"].forEach(id=>{
+    document.getElementById("nav-"+id).classList.remove("active");
+  });
+  
+  document.getElementById(p).classList.remove("hidden");
+  
+  if(p !== 'welcome') {
+    document.getElementById("nav-"+p).classList.add("active");
+  }
+  
+  currentPage = p;
+  
+  if(p==="delete") showDelete();
+  if(p==="calendar") {
+    initMonths();
+    buildCalendar();
+  }
+  if(p==="finance") {
+    showFinanceTab('patients');
+  }
+  if(p==="settings") {
+    displayDoctorInfo();
+  }
+  
+  window.scrollTo(0, 0);
+  triggerHaptic();
+}
+
+async function pickContact(){
+  if("contacts" in navigator && "ContactsManager" in window){
+    const props = ['name','tel'];
+    const opts = {multiple:false};
+    try{
+      const contacts = await navigator.contacts.select(props,opts);
+      if(contacts.length>0) {
+        if(contacts[0].name && contacts[0].name[0]) {
+          document.getElementById('name').value = contacts[0].name[0];
+        }
+        if(contacts[0].tel && contacts[0].tel[0]) {
+          document.getElementById('phone').value = contacts[0].tel[0];
+        }
+        triggerHaptic();
+      }
+    }catch(e){
+      showToast('Contact API dəstəklənmir', 'error');
+    }
+  } else { 
+    showToast('Contact API dəstəklənmir. Manuel olaraq yazın', 'error');
+  }
+}
+
+function add(){
+  let n = document.getElementById("name").value.trim();
+  let p = document.getElementById("phone").value.trim();
+  let d = document.getElementById("date").value.trim();
+  let t = document.getElementById("time").value.trim();
+  let no = document.getElementById("note").value.trim();
+  let debt = parseFloat(document.getElementById("debt").value) || 0;
+  let paid = parseFloat(document.getElementById("paid").value) || 0;
+
+  
+  // Yalnız tarix və saat doldurulubsa conflict yoxla
+  if(d && t) {
+    const existing = data.filter(x => x.date === d && x.time === t);
+    
+    if(existing.length > 0){ 
+      showToast(`Bu saat doludur! ${existing[0].name}`, 'error');
+      return; 
+    }
+  }
+
+  const now = Date.now();
+  const newItem = {
+    name:n, 
+    phone:p, 
+    date:d, 
+    time:t, 
+    note:no, 
+    debt:debt, 
+    paid:paid, 
+    _id:now,
+    files: Object.keys(uploadedFiles).length > 0 ? {...uploadedFiles} : {},
+    paymentHistory: paid > 0 ? [{
+      amount: paid,
+      date: now,
+      note: "İlk ödəniş"
+    }] : []
+  };
+  
+  data.push(newItem);
+  save();
+  showToast('Randevu əlavə olundu!', 'success');
+  triggerHaptic();
+
+  // Telefon nömrəsi varsa WhatsApp mesajı göndər
+  if(p) {
+    let phoneClean = p.replace(/\D/g,''); 
+    if(!phoneClean.startsWith("994")) phoneClean = "994"+phoneClean;
+    
+    // Ayarlardan mesaj dili və şablonu götür
+    const messageLang = localStorage.getItem('messageLang') || 'az';
+    const customTemplate = localStorage.getItem('messageTemplate') || '';
+    
+    let msg = '';
+    
+    if(customTemplate) {
+      // Custom template varsa onu istifadə et və dəyişənləri əvəz et
+      msg = customTemplate
+        .replace(/{name}/g, n)
+        .replace(/{date}/g, formatDate(d))
+        .replace(/{time}/g, t);
+    } else {
+      // Avtomatik mesaj dillərə görə
+      const messages = {
+        az: `Salam ${n}, sizin randevunuz ${formatDate(d)} tarixində saat ${t}-dadır.`,
+        tr: `Merhaba ${n}, randevunuz ${formatDate(d)} tarihinde saat ${t}'tedir.`,
+        en: `Hello ${n}, your appointment is on ${formatDate(d)} at ${t}.`,
+        ru: `Здравствуйте ${n}, ваша запись на ${formatDate(d)} в ${t}.`,
+        de: `Hallo ${n}, Ihr Termin ist am ${formatDate(d)} um ${t} Uhr.`,
+        fr: `Bonjour ${n}, votre rendez-vous est le ${formatDate(d)} à ${t}.`,
+        es: `Hola ${n}, su cita es el ${formatDate(d)} a las ${t}.`,
+        it: `Ciao ${n}, il tuo appuntamento è il ${formatDate(d)} alle ${t}.`,
+        pt: `Olá ${n}, sua consulta é em ${formatDate(d)} às ${t}.`,
+        ar: `مرحبا ${n}، موعدك في ${formatDate(d)} الساعة ${t}.`,
+        fa: `سلام ${n}، قرار ملاقات شما در ${formatDate(d)} ساعت ${t} است.`,
+        he: `שלום ${n}, התור שלך ב-${formatDate(d)} בשעה ${t}.`,
+        hi: `नमस्ते ${n}, आपकी अपॉइंटमेंट ${formatDate(d)} को ${t} बजे है।`,
+        zh: `你好 ${n}，您的预约时间是 ${formatDate(d)} ${t}。`,
+        ja: `こんにちは ${n}、あなたの予約は ${formatDate(d)} ${t} です。`,
+        ko: `안녕하세요 ${n}, 예약 시간은 ${formatDate(d)} ${t}입니다.`,
+        pl: `Witaj ${n}, twoja wizyta jest ${formatDate(d)} o ${t}.`,
+        nl: `Hallo ${n}, uw afspraak is op ${formatDate(d)} om ${t}.`,
+        sv: `Hej ${n}, din tid är ${formatDate(d)} kl ${t}.`,
+        uk: `Привіт ${n}, ваш запис на ${formatDate(d)} о ${t}.`
+      };
+      
+      msg = messages[messageLang] || messages.az;
+    }
+    
+    window.open(`https://wa.me/${phoneClean}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  const gcal = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURIComponent("Randevu: "+n)}&dates=${d.replace(/-/g,'')}T${t.replace(/:/g,'')}00/${d.replace(/-/g,'')}T${t.replace(/:/g,'')}00&sf=true`;
+  window.open(gcal,'_blank');
+
+  document.getElementById("name").value="";
+  document.getElementById("phone").value="";
+  document.getElementById("date").value="";
+  document.getElementById("time").value="";
+  document.getElementById("note").value="";
+  document.getElementById("debt").value="";
+  document.getElementById("paid").value="";
+  uploadedFiles = {};
+  document.getElementById("uploaded-files").innerHTML = "";
+}
+
+function showPatientDetail(patientName, patientPhone) {
+  currentPatient = {name: patientName, phone: patientPhone};
+  
+  const patientAppointments = data.filter(r => r.name === patientName && r.phone === patientPhone);
+  
+  let totalDebt = 0;
+  let totalPaid = 0;
+  let allPayments = [];
+  let allFiles = {};
+  
+  patientAppointments.forEach(appt => {
+    totalDebt += parseFloat(appt.debt) || 0;
+    totalPaid += parseFloat(appt.paid) || 0;
+    
+    if(appt.paymentHistory && appt.paymentHistory.length > 0) {
+      appt.paymentHistory.forEach(payment => {
+        allPayments.push({
+          ...payment,
+          appointmentDate: appt.date,
+          appointmentTime: appt.time
+        });
+      });
+    }
+    
+    if(appt.files) {
+      Object.assign(allFiles, appt.files);
+    }
+  });
+  
+  allPayments.sort((a, b) => b.date - a.date);
+  
+  document.getElementById('modal-patient-name').textContent = patientName;
+  document.getElementById('modal-patient-phone').textContent = patientPhone;
+  document.getElementById('modal-patient-debt').textContent = totalDebt.toFixed(2) + getCurrency();
+  document.getElementById('modal-patient-paid').textContent = totalPaid.toFixed(2) + getCurrency();
+  document.getElementById('modal-patient-remaining').textContent = (totalDebt - totalPaid).toFixed(2) + getCurrency();
+  
+  const progressPercent = totalDebt > 0 ? (totalPaid / totalDebt * 100) : 0;
+  document.getElementById('modal-patient-progress').style.width = progressPercent + '%';
+  document.getElementById('progress-percentage').textContent = progressPercent.toFixed(0) + '%';
+  
+  let paymentHistoryHtml = '';
+  const trans = translations[currentLanguage] || translations.az;
+  
+  if(allPayments.length === 0) {
+    paymentHistoryHtml = `<p style="text-align:center; padding:20px; color:var(--text-secondary); font-size:14px;">${trans['patient-history-title'] || "Hələ ödəniş yoxdur"}</p>`;
+  } else {
+    allPayments.forEach(payment => {
+      const paymentDateText = formatDateWithTime(payment.date);
+      paymentHistoryHtml += `
+        <div class="payment-history-item">
+          <div class="payment-history-header">
+            <span class="payment-date">${paymentDateText}</span>
+            <span class="payment-amount">+${payment.amount.toFixed(2)}${getCurrency()}</span>
+          </div>
+          <div class="payment-details">
+            ${payment.note || trans['btn-pay'] || 'Ödəniş'} - ${trans['nav-add'] ? trans['nav-add'].replace('+ ', '') : 'Randevu'}: ${formatDate(payment.appointmentDate)} ${payment.appointmentTime}
+          </div>
+        </div>
+      `;
+    });
+  }
+  document.getElementById('payment-history').innerHTML = paymentHistoryHtml;
+  
+  let appointmentHistoryHtml = '';
+  patientAppointments.forEach(appt => {
+    const remaining = (parseFloat(appt.debt) || 0) - (parseFloat(appt.paid) || 0);
+    appointmentHistoryHtml += `
+      <div class="payment-history-item">
+        <div class="payment-history-header">
+          <span class="payment-date">${formatDate(appt.date)} - ${appt.time}</span>
+          <span class="payment-amount" style="color:var(--text);">${appt.debt}₼</span>
+        </div>
+        <div class="payment-details">
+          ${translations[currentLanguage]['lbl-paid-short'] || 'Ödənilən:'} ${appt.paid}₼ | ${translations[currentLanguage]['lbl-remaining-short'] || 'Qalıq:'} <span style="color:var(--danger);">${remaining.toFixed(2)}${getCurrency()}</span>
+        </div>
+        ${appt.note ? `<div class="payment-details" style="margin-top:4px;">Qeyd: ${appt.note}</div>` : ''}
+      </div>
+    `;
+  });
+  document.getElementById('appointment-history').innerHTML = appointmentHistoryHtml;
+  
+  let documentsHtml = '';
+  if(Object.keys(allFiles).length === 0) {
+    documentsHtml = '<p style="text-align:center; padding:20px; color:var(--text-secondary); font-size:14px;">Yüklənmiş sənəd yoxdur</p>';
+  } else {
+    for(let fileId in allFiles) {
+      const file = allFiles[fileId];
+      const iconText = file.type.startsWith('image/') ? '🖼️' : '📄';
+      const iconClass = file.type.startsWith('image/') ? 'image' : 'pdf';
+      const fileSize = (file.size / 1024).toFixed(1) + ' KB';
+      
+      documentsHtml += `
+        <div class="uploaded-file">
+          <div class="file-icon ${iconClass}">${iconText}</div>
+          <div class="file-info">
+            <div class="file-name">${file.name}</div>
+            <div class="file-size">${fileSize}</div>
+          </div>
+          <div class="file-actions">
+            <button class="file-action-btn" onclick="viewFileFromData('${file.data}', '${file.type}')">👁</button>
+          </div>
+        </div>
+      `;
+    }
+  }
+  document.getElementById('patient-documents').innerHTML = documentsHtml;
+  
+  document.getElementById('patient-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  triggerHaptic();
+}
+
+function viewFileFromData(data, type) {
+  const win = window.open();
+  if (type.startsWith('image/')) {
+    win.document.write(`<img src="${data}" style="max-width:100%; height:auto;">`);
+  } else {
+    win.document.write(`<iframe src="${data}" style="width:100%; height:100vh; border:none;"></iframe>`);
+  }
+}
+
+function closePatientModal() {
+  document.getElementById('patient-modal').classList.remove('active');
+  document.body.style.overflow = 'auto';
+  document.getElementById('modal-payment-input').value = '';
+  currentPatient = null;
+  triggerHaptic();
+}
+
+function addPaymentFromModal() {
+  if(!currentPatient) return;
+  
+  const input = document.getElementById('modal-payment-input');
+  const amount = parseFloat(input.value);
+  
+  if(!amount || amount <= 0) {
+    showToast('Düzgün məbləğ daxil edin!', 'error');
+    return;
+  }
+  
+  const patientAppointments = data.filter(r => 
+    r.name === currentPatient.name && r.phone === currentPatient.phone
+  );
+  
+  if(patientAppointments.length === 0) {
+    const trans = translations[currentLanguage] || translations.az;
+    showToast(trans['msg-patient-not-found'] || 'Xəstə tapılmadı!', 'error');
+    return;
+  }
+  
+  let remainingAmount = amount;
+  const paymentDate = Date.now();
+  let totalPaidNow = 0;
+  
+  for(let appt of patientAppointments) {
+    if(remainingAmount <= 0) break;
+    
+    const debt = parseFloat(appt.debt) || 0;
+    const paid = parseFloat(appt.paid) || 0;
+    const remaining = debt - paid;
+    
+    if(remaining > 0) {
+      const paymentToAdd = Math.min(remainingAmount, remaining);
+      appt.paid = paid + paymentToAdd;
+      totalPaidNow += paymentToAdd;
+      
+      if(!appt.paymentHistory) {
+        appt.paymentHistory = [];
+      }
+      
+      appt.paymentHistory.push({
+        amount: paymentToAdd,
+        date: paymentDate,
+        note: "Manuel ödəniş"
+      });
+      
+      remainingAmount -= paymentToAdd;
+    }
+  }
+  
+  save();
+  input.value = "";
+  
+  showToast(`${totalPaidNow.toFixed(2)}${getCurrency()} ödəniş əlavə edildi!`, 'success');
+  triggerHaptic();
+  
+  showPatientDetail(currentPatient.name, currentPatient.phone);
+  showFinance();
+}
+
+function showDeleteConfirmation(i, fromCalendar=false) {
+  let item;
+  let idx;
+  
+  if(fromCalendar){
+    item = data.find(r=>r._id===i);
+    idx = data.indexOf(item);
+    if(idx===-1) return;
+  } else {
+    idx = i;
+    item = data[i];
+  }
+  
+  pendingDelete = { item:{...item}, index:idx, fromCalendar:fromCalendar };
+  
+  const detailsHtml = `<strong>Xəstə:</strong> ${item.name}<br><strong>Telefon:</strong> ${item.phone}<br><strong>Tarix:</strong> ${formatDate(item.date)} - ${item.time}`;
+  
+  document.getElementById('confirmation-details').innerHTML = detailsHtml;
+  document.getElementById('confirmation-modal').classList.add('active');
+  triggerHaptic();
+}
+
+function confirmDelete() {
+  if(!pendingDelete) return;
+  
+  const item = pendingDelete.item;
+  const idx = pendingDelete.index;
+  const fromCalendar = pendingDelete.fromCalendar;
+  
+  lastDeleted = { item:{...item}, index:idx, all:false };
+  sendCancellationMessage(item);
+  data.splice(idx,1);
+  save();
+  showUndo();
+  closeConfirmation();
+  
+  if(fromCalendar) buildCalendar();
+  
+  showToast('Randevu silindi', 'warning');
+  triggerHaptic();
+}
+
+function cancelDelete() {
+  closeConfirmation();
+  triggerHaptic();
+}
+
+function closeConfirmation() {
+  document.getElementById('confirmation-modal').classList.remove('active');
+  pendingDelete = null;
+}
+
+function del(i, fromCalendar=false){
+  showDeleteConfirmation(i, fromCalendar);
+}
+
+function sendCancellationMessage(appointment){
+  let phoneClean = appointment.phone.replace(/\D/g,''); 
+  if(!phoneClean.startsWith("994")) phoneClean = "994"+phoneClean;
+  
+  const msg = `Hörmətli ${appointment.name}, ${formatDate(appointment.date)} tarixində saat ${appointment.time}-də planlaşdırılan randevunuz ləğv edildi. Anlayışınız üçün təşəkkür edirik.`;
+  
+  window.open(`https://wa.me/${phoneClean}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function deleteAll(){
+  if(!confirm("Bütün randevular silinsin?")) return;
+  
+  if(data.length > 0) {
+    if(confirm("Bütün xəstələrə ləğv mesajı göndərilsin?")){
+      data.forEach(appointment => {
+        sendCancellationMessage(appointment);
+      });
+    }
+  }
+  
+  lastDeleted = { item:[...data], index:null, all:true };
+  data = [];
+  save();
+  showUndo();
+  triggerHaptic();
+}
+
+function showDelete(){
+  let filter = document.getElementById("search").value.toLowerCase();
+  let list=document.getElementById("list");
+  list.innerHTML="";
+  
+  if(data.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">${translations[currentLanguage]['no-appointments']}</div>`;
+    return;
+  }
+  
+  data.forEach((r,i)=>{
+    if(r.name.toLowerCase().includes(filter) || r.phone.includes(filter)){
+      list.innerHTML+=`<div class="appointment">
+        <div class="appointment-header">
+          <div class="appointment-date">${formatDate(r.date)} - ${r.time}</div>
+          <div class="appointment-actions">
+            <button onclick="edit(${i})" style="background:var(--primary);">Edit</button>
+            <button class="btn-danger" onclick="del(${i})">Sil</button>
+          </div>
+        </div>
+        <p style="margin:8px 0; font-size:14px;"><strong>${r.name}</strong></p>
+        <p style="margin:6px 0; font-size:13px; color:var(--text-secondary);">${r.phone}</p>
+        <p style="margin:6px 0; font-size:12px; color:var(--text-secondary);">Qeyd: ${r.note||"yoxdur"}</p>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:12px; font-size:13px;">
+          <span>${translations[currentLanguage]['lbl-amount-short'] || 'Məbləğ:'} <strong>${r.debt}${getCurrency()}</strong></span>
+          <span>Ödənilən: <strong>${r.paid}${getCurrency()}</strong></span>
+          <span style="color:var(--danger);">${translations[currentLanguage]['lbl-remaining-short'] || 'Qalıq:'} <strong>${(r.debt - r.paid).toFixed(2)}${getCurrency()}</strong></span>
+        </div>
+      </div>`;
+    }
+  });
+  
+  if(list.innerHTML === "") {
+    const trans = translations[currentLanguage] || translations.az;
+    list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">${trans['msg-no-results'] || 'Heç nə tapılmadı'}</div>`;
+  }
+}
+
+function edit(i){
+  const r = data[i];
+  editingIndex = i;
+  
+  document.getElementById("edit-name").value = r.name;
+  document.getElementById("edit-phone").value = r.phone;
+  document.getElementById("edit-date").value = r.date;
+  document.getElementById("edit-time").value = r.time || "";
+  document.getElementById("edit-note").value = r.note || "";
+  document.getElementById("edit-debt").value = r.debt || 0;
+  document.getElementById("edit-paid").value = r.paid || 0;
+  
+  document.getElementById('edit-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  triggerHaptic();
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('active');
+  document.body.style.overflow = 'auto';
+  editingIndex = null;
+  triggerHaptic();
+}
+
+function saveEdit() {
+  if(editingIndex === null) return;
+  
+  let n = document.getElementById("edit-name").value.trim();
+  let p = document.getElementById("edit-phone").value.trim();
+  let d = document.getElementById("edit-date").value.trim();
+  let t = document.getElementById("edit-time").value.trim();
+  let no = document.getElementById("edit-note").value.trim();
+  let debt = parseFloat(document.getElementById("edit-debt").value) || 0;
+  let paid = parseFloat(document.getElementById("edit-paid").value) || 0;
+
+  
+  // Yalnız tarix və saat doldurulubsa conflict yoxla
+  if(d && t) {
+    const existing = data.filter((x, idx) => idx !== editingIndex && x.date === d && x.time === t);
+    
+    if(existing.length > 0){ 
+      showToast(`Bu saat doludur! ${existing[0].name}`, 'error');
+      return; 
+    }
+  }
+
+  data[editingIndex].name = n;
+  data[editingIndex].phone = p;
+  data[editingIndex].date = d;
+  data[editingIndex].time = t;
+  data[editingIndex].note = no;
+  data[editingIndex].debt = debt;
+  data[editingIndex].paid = paid;
+  
+  save();
+  showToast('Dəyişikliklər saxlanıldı!', 'success');
+  triggerHaptic();
+  closeEditModal();
+  
+  if(currentPage === "delete") showDelete();
+  if(currentPage === "calendar") buildCalendar();
+}
+
+function save(){
+  localStorage.setItem("randevu",JSON.stringify(data));
+  if(currentPage === "delete"){
+    showDelete();
+  }
+  if(currentPage === "finance"){
+    showFinance();
+  }
+}
+
+function showUndo(){
+  const bar=document.getElementById("undo");
+  bar.style.display="block";
+  clearTimeout(undoTimer);
+  undoTimer=setTimeout(()=>{ bar.style.display="none"; lastDeleted=null; },5000);
+}
+
+function undo(){
+  if(!lastDeleted) return;
+  if(lastDeleted.all){ data = lastDeleted.item; }
+  else { data.splice(lastDeleted.index,0,lastDeleted.item); }
+  lastDeleted=null;
+  save();
+  document.getElementById("undo").style.display="none";
+  showToast('Geri qaytarıldı!', 'success');
+  triggerHaptic();
+}
+
+function showFinanceTab(tab){
+  const tabButtons = {
+    patients: document.getElementById('tab-patients'),
+    income: document.getElementById('tab-income'),
+    expense: document.getElementById('tab-expense')
+  };
+  
+  const tabContents = {
+    patients: document.getElementById('patients-tab'),
+    income: document.getElementById('income-tab'),
+    expense: document.getElementById('expense-tab')
+  };
+  
+  Object.keys(tabButtons).forEach(key => {
+    if(key === tab) {
+      tabButtons[key].style.background = 'var(--primary)';
+      tabButtons[key].style.color = 'white';
+      tabButtons[key].style.borderColor = 'var(--primary)';
+      tabContents[key].style.display = 'block';
+    } else {
+      tabButtons[key].style.background = 'transparent';
+      tabButtons[key].style.color = 'var(--text)';
+      tabButtons[key].style.borderColor = 'var(--border)';
+      tabContents[key].style.display = 'none';
+    }
+  });
+  
+  updateMainSummary();
+  
+  if(tab === 'patients') showFinance();
+  if(tab === 'income') showIncome();
+  if(tab === 'expense') showExpense();
+  
+  triggerHaptic();
+}
+
+function updateMainSummary(){
+  let patientIncome = 0;
+  let patientDebt = 0;
+  
+  data.forEach(r => {
+    patientIncome += parseFloat(r.paid) || 0;
+    patientDebt += parseFloat(r.debt) || 0;
+  });
+  
+  let otherIncome = 0;
+  incomeData.forEach(item => {
+    otherIncome += parseFloat(item.amount) || 0;
+  });
+  
+  let totalIncome = patientIncome + otherIncome;
+  
+  let totalExpense = 0;
+  expenseData.forEach(item => {
+    totalExpense += parseFloat(item.amount) || 0;
+  });
+  
+  let netIncome = totalIncome - totalExpense;
+  
+  document.getElementById('patient-income').textContent = patientIncome.toFixed(2) + getCurrency();
+  document.getElementById('other-income').textContent = otherIncome.toFixed(2) + getCurrency();
+  document.getElementById('total-income').textContent = totalIncome.toFixed(2) + getCurrency();
+  document.getElementById('total-expense').textContent = totalExpense.toFixed(2) + getCurrency();
+  document.getElementById('net-income').textContent = netIncome.toFixed(2) + getCurrency();
+  
+  const netIncomeElement = document.getElementById('net-income');
+  if(netIncome < 0) {
+    netIncomeElement.style.color = 'var(--danger)';
+  } else {
+    netIncomeElement.style.color = 'var(--success)';
+  }
+}
+
+function showFinance(){
+  const filter = document.getElementById("finance-search").value.toLowerCase();
+  
+  let totalDebt = 0;
+  let totalRemaining = 0;
+  
+  const patientMap = {};
+  
+  data.forEach(r => {
+    const debt = parseFloat(r.debt) || 0;
+    const paid = parseFloat(r.paid) || 0;
+    
+    if(debt > 0) {
+      const key = `${r.name}|||${r.phone}`;
+      
+      if(!patientMap[key]) {
+        patientMap[key] = {
+          name: r.name,
+          phone: r.phone,
+          totalDebt: 0,
+          totalPaid: 0,
+          appointments: []
+        };
+      }
+      
+      patientMap[key].totalDebt += debt;
+      patientMap[key].totalPaid += paid;
+      patientMap[key].appointments.push(r);
+      
+      totalDebt += debt;
+      totalRemaining += (debt - paid);
+    }
+  });
+  
+  let summaryHtml = `
+    <p><strong>${translations[currentLanguage]['lbl-total-amount'] || 'Ümumi Məbləğ:'}</strong> ${totalDebt.toFixed(2)}${getCurrency()}</p>
+    <p style="color:var(--danger);"><strong>${translations[currentLanguage]['lbl-total-remaining-short'] || 'Ümumi Qalıq:'}</strong> ${totalRemaining.toFixed(2)}${getCurrency()}</p>
+  `;
+  document.getElementById("finance-summary").innerHTML = summaryHtml;
+  
+  document.getElementById("patient-total-remaining").textContent = totalRemaining.toFixed(2) + getCurrency();
+  
+  let patientsHtml = "";
+  const patients = Object.values(patientMap);
+  
+  const filteredPatients = patients.filter(p => 
+    p.name.toLowerCase().includes(filter) || p.phone.includes(filter)
+  );
+  
+  if(filteredPatients.length === 0) {
+    const trans = translations[currentLanguage] || translations.az;
+    patientsHtml = `<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">${trans['msg-no-patient'] || 'Heç bir xəstə tapılmadı'}</div>`;
+  } else {
+    filteredPatients.forEach(patient => {
+      const patientRemaining = patient.totalDebt - patient.totalPaid;
+      const progressPercent = patient.totalDebt > 0 ? (patient.totalPaid / patient.totalDebt * 100) : 0;
+      
+      patientsHtml += `
+        <div class="finance-patient" onclick="showPatientDetail('${patient.name.replace(/'/g, "\\'")}', '${patient.phone}')">
+          <div class="finance-patient-header">
+            <div>
+              <div class="finance-patient-name">${patient.name}</div>
+              <div class="finance-patient-phone">${patient.phone}</div>
+            </div>
+            <div class="finance-patient-amount">
+              <div class="finance-patient-debt">${patient.totalDebt.toFixed(2)}${getCurrency()}</div>
+              <div class="finance-patient-remaining">${translations[currentLanguage]['lbl-remaining-short'] || 'Qalıq:'} ${patientRemaining.toFixed(2)}${getCurrency()}</div>
+            </div>
+          </div>
+          <div class="progress-bar-container" style="margin-top:8px;">
+            <div class="progress-bar" style="width:${progressPercent}%;"></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById("finance-patients").innerHTML = patientsHtml;
+}
+
+function addIncome(){
+  let name = document.getElementById("income-name").value.trim();
+  let amount = parseFloat(document.getElementById("income-amount").value) || 0;
+  let date = document.getElementById("income-date").value.trim();
+  let note = document.getElementById("income-note").value.trim();
+  
+  
+  const incomeItem = {
+    name: name,
+    amount: amount,
+    date: date,
+    note: note,
+    _id: Date.now()
+  };
+  
+  incomeData.push(incomeItem);
+  localStorage.setItem("income", JSON.stringify(incomeData));
+  
+  showToast('Gəlir əlavə olundu!', 'success');
+  triggerHaptic();
+  
+  document.getElementById("income-name").value = "";
+  document.getElementById("income-amount").value = "";
+  document.getElementById("income-date").value = "";
+  document.getElementById("income-note").value = "";
+  
+  updateMainSummary();
+  showIncome();
+}
+
+function deleteIncome(id){
+  if(!confirm("Silməyi istədiyiniz əminsiniz?")) return;
+  
+  incomeData = incomeData.filter(item => item._id !== id);
+  localStorage.setItem("income", JSON.stringify(incomeData));
+  updateMainSummary();
+  showIncome();
+  showToast('Gəlir silindi', 'success');
+  triggerHaptic();
+}
+
+function showIncome(){
+  let totalIncome = 0;
+  
+  incomeData.forEach(item => {
+    totalIncome += parseFloat(item.amount) || 0;
+  });
+  
+  let summaryHtml = `
+    <div class="card" style="margin-bottom:16px;">
+      <h4 style="color:var(--success); margin-bottom:12px;">${translations[currentLanguage]['income-report']}</h4>
+      <p><strong>${translations[currentLanguage]['total-income']}</strong> <span style="color:var(--success);">${totalIncome.toFixed(2)}${localStorage.getItem('currency') || '₼'}</span></p>
+    </div>
+  `;
+  
+  document.getElementById("income-summary").innerHTML = summaryHtml;
+  
+  let listHtml = "";
+  
+  if(incomeData.length === 0){
+    listHtml = `<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">${translations[currentLanguage]['no-income']}</div>`;
+  } else {
+    incomeData.forEach(item => {
+      listHtml += `
+        <div class="finance-patient">
+          <div class="finance-patient-header">
+            <div>
+              <div class="finance-patient-name">${item.name}</div>
+              <div class="finance-patient-phone">${formatDate(item.date)}</div>
+            </div>
+            <div class="finance-patient-amount">
+              <div class="finance-patient-debt" style="color:var(--success);">${item.amount.toFixed(2)}${getCurrency()}</div>
+              <button onclick="deleteIncome(${item._id})" class="btn-danger" style="width:auto; padding:6px 12px; margin-top:4px; font-size:12px;">Sil</button>
+            </div>
+          </div>
+          ${item.note ? `<p style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:13px; color:var(--text-secondary);">Qeyd: ${item.note}</p>` : ''}
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById("income-list").innerHTML = listHtml;
+}
+
+function addExpense(){
+  let name = document.getElementById("expense-name").value.trim();
+  let amount = parseFloat(document.getElementById("expense-amount").value) || 0;
+  let date = document.getElementById("expense-date").value.trim();
+  let note = document.getElementById("expense-note").value.trim();
+  
+  
+  const expenseItem = {
+    name: name,
+    amount: amount,
+    date: date,
+    note: note,
+    _id: Date.now()
+  };
+  
+  expenseData.push(expenseItem);
+  localStorage.setItem("expense", JSON.stringify(expenseData));
+  
+  showToast('Xərc əlavə olundu!', 'success');
+  triggerHaptic();
+  
+  document.getElementById("expense-name").value = "";
+  document.getElementById("expense-amount").value = "";
+  document.getElementById("expense-date").value = "";
+  document.getElementById("expense-note").value = "";
+  
+  updateMainSummary();
+  showExpense();
+}
+
+function deleteExpense(id){
+  if(!confirm("Silməyi istədiyiniz əminsiniz?")) return;
+  
+  expenseData = expenseData.filter(item => item._id !== id);
+  localStorage.setItem("expense", JSON.stringify(expenseData));
+  updateMainSummary();
+  showExpense();
+  showToast('Xərc silindi', 'success');
+  triggerHaptic();
+}
+
+function showExpense(){
+  let totalExpense = 0;
+  
+  expenseData.forEach(item => {
+    totalExpense += parseFloat(item.amount) || 0;
+  });
+  
+  let summaryHtml = `
+    <div class="card" style="margin-bottom:16px;">
+      <h4 style="color:var(--danger); margin-bottom:12px;">${translations[currentLanguage]['expense-report']}</h4>
+      <p><strong>${translations[currentLanguage]['total-expense']}</strong> <span style="color:var(--danger);">${totalExpense.toFixed(2)}${localStorage.getItem('currency') || '₼'}</span></p>
+    </div>
+  `;
+  
+  document.getElementById("expense-summary").innerHTML = summaryHtml;
+  
+  let listHtml = "";
+  
+  if(expenseData.length === 0){
+    listHtml = `<div style="text-align:center; padding:30px; color:var(--text-secondary); font-size:14px;">${translations[currentLanguage]['no-expense']}</div>`;
+  } else {
+    expenseData.forEach(item => {
+      listHtml += `
+        <div class="finance-patient">
+          <div class="finance-patient-header">
+            <div>
+              <div class="finance-patient-name">${item.name}</div>
+              <div class="finance-patient-phone">${formatDate(item.date)}</div>
+            </div>
+            <div class="finance-patient-amount">
+              <div class="finance-patient-debt" style="color:var(--danger);">${item.amount.toFixed(2)}${getCurrency()}</div>
+              <button onclick="deleteExpense(${item._id})" class="btn-danger" style="width:auto; padding:6px 12px; margin-top:4px; font-size:12px;">Sil</button>
+            </div>
+          </div>
+          ${item.note ? `<p style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:13px; color:var(--text-secondary);">Qeyd: ${item.note}</p>` : ''}
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById("expense-list").innerHTML = listHtml;
+}
+
+function initMonths(){
+  const monthSelect = document.getElementById("month");
+  monthSelect.innerHTML = "";
+  
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  
+  for(let year = currentYear - 2; year <= currentYear + 2; year++){
+    for(let month = 0; month < 12; month++){
+      let opt = document.createElement("option");
+      opt.value = `${year}-${month}`;
+      opt.text = `${translations[currentLanguage]['month-' + month]} ${year}`;
+      monthSelect.appendChild(opt);
+    }
+  }
+  
+  monthSelect.value = `${currentYear}-${currentMonth}`;
+}
+
+function buildCalendar(){
+  const monthValue = document.getElementById("month").value.split('-');
+  const year = parseInt(monthValue[0]);
+  const month = parseInt(monthValue[1]);
+  
+  const firstDayDate = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let firstDay = firstDayDate.getDay(); 
+  let startDay = (firstDay === 0) ? 6 : firstDay - 1;
+
+  let html = '<table><tr>';
+  
+  const weekdays = [0,1,2,3,4,5,6].map(i => translations[currentLanguage]['weekday-' + i]);
+  
+  weekdays.forEach(d => html += '<th>'+d+'</th>'); 
+  html += '</tr><tr>';
+  
+  for(let i = 0; i < startDay; i++) {
+    html += '<td></td>';
+  }
+
+  for(let d = 1; d <= daysInMonth; d++){
+    const fullDate = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasAppt = data.some(r => r.date === fullDate);
+    const isSelected = selectedDate === fullDate;
+    
+    let className = '';
+    if(isSelected) className = 'selected';
+    else if(hasAppt) className = 'hasAppt';
+    
+    html += `<td class="${className}" onclick="showDay('${fullDate}')">${d}</td>`;
+    
+    if((startDay + d) % 7 === 0 && d < daysInMonth) {
+      html += '</tr><tr>';
+    }
+  }
+  
+  html += '</tr></table>';
+  document.getElementById('calendar-table').innerHTML = html;
+  
+  if(!selectedDate){
+    document.getElementById('day-appointments').innerHTML = '';
+  }
+}
+
+function showDay(date){
+  selectedDate = date;
+  buildCalendar();
+  
+  const dayAppointments = data.filter(r => r.date === date);
+  
+  let html = `
+    <div class="day-header">
+      <h4>${formatDate(date)}</h4>
+      <button onclick="clearSelection()">Geri</button>
+    </div>
+  `;
+  
+  html += '<div class="time-grid">';
+  
+  for(let hour = 9; hour <= 18; hour++){
+    for(let min = 0; min < 60; min += 30){
+      if(hour === 18 && min > 0) break;
+      
+      const timeStr = `${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
+      const appointment = dayAppointments.find(a => a.time === timeStr);
+      
+      if(appointment){
+        html += `
+          <div class="time-slot booked">
+            <div class="time">${timeStr}</div>
+            <div class="patient">${appointment.name}</div>
+            <div class="patient">${appointment.phone}</div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="time-slot" onclick="addForDayTime('${date}', '${timeStr}')">
+            <div class="time">${timeStr}</div>
+            <div class="status">Boş</div>
+          </div>
+        `;
+      }
+    }
+  }
+  
+  html += '</div>';
+  
+  if(dayAppointments.length > 0){
+    html += `<div style="margin-top:20px;"><h4 style="margin-bottom:12px; font-size:18px;">Randevu Detalları:</h4>`;
+    dayAppointments.forEach((r) => {
+      const idx = data.indexOf(r);
+      html += `<div class="appointment">
+        <div class="appointment-header">
+          <div class="appointment-date">${r.time}</div>
+          <div class="appointment-actions">
+            <button onclick="edit(${idx})" style="background:var(--primary);">Edit</button>
+            <button class="btn-danger" onclick="del(${r._id}, true)">Sil</button>
+          </div>
+        </div>
+        <p style="margin:8px 0; font-size:14px;"><strong>${r.name}</strong></p>
+        <p style="margin:6px 0; font-size:13px; color:var(--text-secondary);">${r.phone}</p>
+        <p style="margin:6px 0; font-size:12px; color:var(--text-secondary);">Qeyd: ${r.note||"yoxdur"}</p>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:12px; font-size:13px;">
+          <span>${translations[currentLanguage]['lbl-amount-short'] || 'Məbləğ:'} <strong>${r.debt}${getCurrency()}</strong></span>
+          <span>Ödənilən: <strong>${r.paid}${getCurrency()}</strong></span>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  
+  document.getElementById('day-appointments').innerHTML = html;
+  triggerHaptic();
+}
+
+function clearSelection(){
+  selectedDate = null;
+  buildCalendar();
+  document.getElementById('day-appointments').innerHTML = '';
+  triggerHaptic();
+}
+
+function addForDayTime(date, time){
+  showPage('add'); 
+  document.getElementById('date').value = date; 
+  document.getElementById('time').value = time; 
+  document.getElementById('name').focus();
+  triggerHaptic();
+}
+
+function showSettingsTab(tab){
+  const tabs = ['doctor', 'appearance', 'stats', 'backup'];
+  
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    const content = document.getElementById(`${t}-tab`);
+    
+    if(t === tab) {
+      btn.style.background = 'var(--primary)';
+      btn.style.color = 'white';
+      btn.style.borderColor = 'var(--primary)';
+      content.style.display = 'block';
+    } else {
+      btn.style.background = 'transparent';
+      btn.style.color = 'var(--text)';
+      btn.style.borderColor = 'var(--border)';
+      content.style.display = 'none';
+    }
+  });
+  
+  if(tab === 'doctor') displayDoctorInfo();
+  if(tab === 'stats') updateStatistics();
+  
+  triggerHaptic();
+}
+
+function saveDoctorInfo(){
+  doctorInfo = {
+    name: document.getElementById("doctor-name").value.trim(),
+    clinic: document.getElementById("clinic-name").value.trim(),
+    address: document.getElementById("clinic-address").value.trim(),
+    phone: document.getElementById("doctor-phone").value.trim(),
+    email: document.getElementById("doctor-email").value.trim()
+  };
+  
+  localStorage.setItem("doctorInfo", JSON.stringify(doctorInfo));
+  displayDoctorInfo();
+  showToast('Həkim məlumatları saxlanıldı!', 'success');
+  triggerHaptic();
+}
+
+function loadDoctorInfo(){
+  if(doctorInfo.name) document.getElementById("doctor-name").value = doctorInfo.name;
+  if(doctorInfo.clinic) document.getElementById("clinic-name").value = doctorInfo.clinic;
+  if(doctorInfo.address) document.getElementById("clinic-address").value = doctorInfo.address;
+  if(doctorInfo.phone) document.getElementById("doctor-phone").value = doctorInfo.phone;
+  if(doctorInfo.email) document.getElementById("doctor-email").value = doctorInfo.email;
+  
+  displayDoctorInfo();
+}
+
+function displayDoctorInfo(){
+  const display = document.getElementById("doctor-display");
+  
+  if(!doctorInfo.name && !doctorInfo.clinic){
+    display.innerHTML = `<p style='text-align:center;opacity:0.6; font-size:14px;'>${translations[currentLanguage]['doctor-info-add']}</p>`;
+    return;
+  }
+  
+  let html = "<h4 style='font-size:16px; margin-bottom:8px;'>Cari Həkim Məlumatları:</h4>";
+  if(doctorInfo.name) html += `<p style='font-size:13px;'><strong>Həkim:</strong> ${doctorInfo.name}</p>`;
+  if(doctorInfo.clinic) html += `<p style='font-size:13px;'><strong>Klinika:</strong> ${doctorInfo.clinic}</p>`;
+  if(doctorInfo.address) html += `<p style='font-size:13px;'><strong>Ünvan:</strong> ${doctorInfo.address}</p>`;
+  if(doctorInfo.phone) html += `<p style='font-size:13px;'><strong>Telefon:</strong> ${doctorInfo.phone}</p>`;
+  if(doctorInfo.email) html += `<p style='font-size:13px;'><strong>E-poçt:</strong> ${doctorInfo.email}</p>`;
+  
+  display.innerHTML = html;
+}
+
+function exportData(){
+  const exportObj = {
+    version: "2.4",
+    exportDate: new Date().toISOString(),
+    appointments: data,
+    doctorInfo: doctorInfo,
+    theme: localStorage.getItem("theme") || "light",
+    font: localStorage.getItem("font") || "Inter",
+    language: localStorage.getItem("language") || "az",
+    pinCode: localStorage.getItem("pinCode") || null,
+    customFontData: localStorage.getItem("customFontData") || null,
+    incomeData: incomeData,
+    expenseData: expenseData,
+    haptic: localStorage.getItem("haptic") || "on"
+  };
+  
+  const jsonStr = JSON.stringify(exportObj, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `SimpleDent_Backup_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Yedək fayl endirildi', 'success');
+  triggerHaptic();
+}
+
+function copyExportCode(){
+  const codeBox = document.getElementById("export-code");
+  codeBox.select();
+  codeBox.setSelectionRange(0, 99999);
+  
+  try {
+    document.execCommand('copy');
+    showToast('Kod kopyalandı!', 'success');
+    triggerHaptic();
+  } catch (err) {
+    navigator.clipboard.writeText(codeBox.value).then(() => {
+      showToast('Kod kopyalandı!', 'success');
+      triggerHaptic();
+    }).catch(() => {
+      showToast('Kopyalama xətası!', 'error');
+    });
+  }
+}
+
+function importFromCode(){
+  const code = document.getElementById("import-code").value.trim();
+  
+  if(!code) {
+    showToast('Import kodunu daxil edin!', 'error');
+    return;
+  }
+  
+  try {
+    const decodedData = JSON.parse(decodeURIComponent(atob(code)));
+    
+    if(decodedData.version && decodedData.appointments){
+      data = decodedData.appointments;
+      
+      if(decodedData.doctorInfo) {
+        doctorInfo = decodedData.doctorInfo;
+        localStorage.setItem("doctorInfo", JSON.stringify(doctorInfo));
+        loadDoctorInfo();
+      }
+      
+      if(decodedData.theme) {
+        setTheme(decodedData.theme);
+        document.getElementById("theme-select").value = decodedData.theme;
+      }
+      
+      if(decodedData.font) {
+        localStorage.setItem("font", decodedData.font);
+      }
+      
+      if(decodedData.language) {
+        setLanguage(decodedData.language);
+      }
+      
+      if(decodedData.pinCode) {
+        localStorage.setItem("pinCode", decodedData.pinCode);
+        pinCode = decodedData.pinCode;
+      }
+      
+      if(decodedData.customFontData) {
+        localStorage.setItem("customFontData", decodedData.customFontData);
+      }
+      
+      if(decodedData.incomeData) {
+        incomeData = decodedData.incomeData;
+        localStorage.setItem("income", JSON.stringify(incomeData));
+      }
+      
+      if(decodedData.expenseData) {
+        expenseData = decodedData.expenseData;
+        localStorage.setItem("expense", JSON.stringify(expenseData));
+      }
+      
+      if(decodedData.haptic) {
+        localStorage.setItem("haptic", decodedData.haptic);
+        hapticEnabled = decodedData.haptic === "on";
+      }
+      
+      save();
+      document.getElementById("import-code").value = "";
+      showToast('Məlumatlar uğurla yükləndi!', 'success');
+      triggerHaptic();
+      
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      showToast('Kod formatı düzgün deyil!', 'error');
+    }
+  } catch(err) {
+    showToast('Kod düzgün deyil!', 'error');
+  }
+}
+
+function clearAllData(){
+  if(confirm("XƏBƏRDARLIQ: Bütün randevular və ayarlar silinəcək! Davam edək?")){
+    localStorage.clear();
+    data = [];
+    doctorInfo = {};
+    showToast('Bütün məlumatlar silindi!', 'warning');
+    triggerHaptic();
+    setTimeout(() => location.reload(), 1000);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  detectLanguage();
+  loadTheme();
+  loadFont();
+  loadCurrency();
+  loadPhoneCode();
+  loadMessageSettings();
+  updateLanguage();
+  loadDoctorInfo();
+  
+  const savedHaptic = localStorage.getItem("haptic") || "on";
+  hapticEnabled = savedHaptic === "on";
+  document.getElementById("haptic-select").value = savedHaptic;
+  
+  // Initialize currency labels
+  updateCurrencyLabels();
+  
+  if(checkPinRequired()) {
+    return;
+  }
+  
+  console.log("App loaded");
+  showPage("welcome");
+});
+
+function setCurrency(currency) {
+  localStorage.setItem('currency', currency);
+  
+  // Update currency labels everywhere
+  updateCurrencyLabels();
+  
+  // Refresh pages
+  if(currentPage === 'finance') showFinance();
+  if(currentPage === 'delete') showDelete();
+  if(currentPage === 'settings') updateStatistics();
+  
+  const toastMessages = {
+    az: 'Valyuta dəyişdirildi',
+    tr: 'Para birimi değiştirildi',
+    en: 'Currency changed',
+    ru: 'Валюта изменена'
+  };
+  showToast(toastMessages[currentLanguage] || toastMessages.az, 'success');
+  triggerHaptic();
+}
+
+function loadCurrency() {
+  const savedCurrency = localStorage.getItem('currency') || '₼';
+  document.getElementById('currency-select').value = savedCurrency;
+}
+
+function setPhoneCode(value) {
+  if(value === 'custom') {
+    document.getElementById('custom-phone-code-input').style.display = 'block';
+  } else {
+    document.getElementById('custom-phone-code-input').style.display = 'none';
+    localStorage.setItem('phoneCode', value);
+    
+    // Placeholder-ları yenilə
+    const phoneInputs = document.querySelectorAll('#phone, #doctor-phone');
+    phoneInputs.forEach(input => {
+      if(input) input.placeholder = value + ' XX XXX XX XX';
+    });
+    
+    showToast('Telefon kodu dəyişdirildi', 'success');
+    triggerHaptic();
+  }
+}
+
+function saveCustomPhoneCode() {
+  const customCode = document.getElementById('custom-phone-code').value.trim();
+  if(!customCode || !customCode.startsWith('+')) {
+    showToast('Telefon kodu + ilə başlamalıdır', 'error');
+    return;
+  }
+  localStorage.setItem('phoneCode', customCode);
+  document.getElementById('custom-phone-code-input').style.display = 'none';
+  
+  // Placeholder-ları yenilə
+  const phoneInputs = document.querySelectorAll('#phone, #doctor-phone');
+  phoneInputs.forEach(input => {
+    if(input) input.placeholder = customCode + ' XX XXX XX XX';
+  });
+  
+  showToast('Custom kod saxlanıldı', 'success');
+  triggerHaptic();
+}
+
+function loadPhoneCode() {
+  const phoneCode = localStorage.getItem('phoneCode') || '+994';
+  const select = document.getElementById('phone-code-select');
+  const options = Array.from(select.options).map(o => o.value);
+  if(options.includes(phoneCode)) {
+    select.value = phoneCode;
+  } else {
+    select.value = 'custom';
+    document.getElementById('custom-phone-code').value = phoneCode;
+  }
+  
+  // Placeholder-ları yenilə
+  const phoneInputs = document.querySelectorAll('#phone, #doctor-phone');
+  phoneInputs.forEach(input => {
+    if(input) input.placeholder = phoneCode + ' XX XXX XX XX';
+  });
+}
+
+function detectLanguage() {
+  const savedLang = localStorage.getItem('language');
+  if(savedLang) return;
+  const browserLang = navigator.language || navigator.userLanguage;
+  if(browserLang.startsWith('az')) currentLanguage = 'az';
+  else if(browserLang.startsWith('tr')) currentLanguage = 'tr';
+  else if(browserLang.startsWith('ru')) currentLanguage = 'ru';
+  else currentLanguage = 'en';
+  localStorage.setItem('language', currentLanguage);
+}
+
+function saveMessageLang(lang) {
+  localStorage.setItem('messageLang', lang);
+  showToast('Mesaj dili dəyişdirildi', 'success');
+  triggerHaptic();
+}
+
+function saveMessageTemplate() {
+  const template = document.getElementById('settings-message-template').value.trim();
+  localStorage.setItem('messageTemplate', template);
+  showToast('Mesaj şablonu saxlanıldı!', 'success');
+  triggerHaptic();
+}
+
+function loadMessageSettings() {
+  const messageLang = localStorage.getItem('messageLang') || 'az';
+  const messageTemplate = localStorage.getItem('messageTemplate') || '';
+  
+  const messageLangSelect = document.getElementById('settings-message-lang');
+  const messageTemplateInput = document.getElementById('settings-message-template');
+  
+  if(messageLangSelect) {
+    messageLangSelect.value = messageLang;
+  }
+  
+  if(messageTemplateInput) {
+    messageTemplateInput.value = messageTemplate;
+  }
+}
+
+function importBackupFile() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const decodedData = JSON.parse(event.target.result);
+        if(decodedData.version && decodedData.appointments){
+          data = decodedData.appointments;
+          if(decodedData.doctorInfo) { doctorInfo = decodedData.doctorInfo; localStorage.setItem("doctorInfo", JSON.stringify(doctorInfo)); }
+          if(decodedData.theme) { setTheme(decodedData.theme); document.getElementById("theme-select").value = decodedData.theme; }
+          if(decodedData.font) localStorage.setItem("font", decodedData.font);
+          if(decodedData.language) setLanguage(decodedData.language);
+          if(decodedData.pinCode) { localStorage.setItem("pinCode", decodedData.pinCode); pinCode = decodedData.pinCode; }
+          if(decodedData.incomeData) { incomeData = decodedData.incomeData; localStorage.setItem("income", JSON.stringify(incomeData)); }
+          if(decodedData.expenseData) { expenseData = decodedData.expenseData; localStorage.setItem("expense", JSON.stringify(expenseData)); }
+          save();
+          showToast('Məlumatlar yükləndi', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } else showToast('Fayl düzgün deyil', 'error');
+      } catch(err) { showToast('Fayl oxuma xətası', 'error'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+</script>
+
+<script>
+function applyLanguage(lang){
+  if(typeof LANG!=="object") return;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k=el.getAttribute("data-i18n");
+    if(LANG[lang]&&LANG[lang][k]) el.innerText=LANG[lang][k];
+  });
+}
+const _oldSetLang = window.setLanguage;
+window.setLanguage = function(lang){
+  if(_oldSetLang) _oldSetLang(lang);
+  applyLanguage(lang);
+};
+document.addEventListener("DOMContentLoaded",()=>{
+  const lang=localStorage.getItem("language");
+  if(lang) applyLanguage(lang);
+});
+</script>
+
+
+<script>
+/* ==== SimpleDent Language FULL Fix (non-invasive) ==== */
+(function(){
+  const FALLBACK_TRANSLATIONS = {
+    tr: {
+      "Yeni Randevu":"Yeni Randevu",
+      "Təqvim":"Takvim",
+      "Maliyyə":"Finans",
+      "Ayarlar":"Ayarlar",
+      "Randevular":"Randevular",
+      "Ad Soyadı":"Ad Soyad",
+      "Telefon Nömrəsi":"Telefon Numarası",
+      "Qeyd":"Not",
+      "Randevu Yarat":"Randevu Oluştur",
+      "Hamısını Sil":"Hepsini Sil",
+      "Axtar":"Ara"
+    },
+    en: {
+      "Yeni Randevu":"New Appointment",
+      "Təqvim":"Calendar",
+      "Maliyyə":"Finance",
+      "Ayarlar":"Settings",
+      "Randevular":"Appointments",
+      "Ad Soyadı":"Full Name",
+      "Telefon Nömrəsi":"Phone Number",
+      "Qeyd":"Note",
+      "Randevu Yarat":"Create Appointment",
+      "Hamısını Sil":"Delete All",
+      "Axtar":"Search"
+    }
+  };
+
+  function applyFallback(lang){
+    const map = FALLBACK_TRANSLATIONS[lang];
+    if(!map) return;
+    document.querySelectorAll("body *").forEach(el=>{
+      if(el.children.length===0){
+        const t = el.innerText?.trim();
+        if(map[t]) el.innerText = map[t];
+      }
+      if(el.placeholder && map[el.placeholder.trim()]){
+        el.placeholder = map[el.placeholder.trim()];
+      }
+    });
+  }
+
+  const _setLang = window.setLanguage;
+ 
